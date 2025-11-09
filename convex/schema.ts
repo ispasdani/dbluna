@@ -81,8 +81,20 @@ export default defineSchema({
   }),
 
   visitors: defineTable({
-    visitorId: v.string(), // UUID from cookie
+    visitorId: v.string(), // from cookie
+    userAgent: v.optional(v.string()),
     createdAt: v.number(),
     lastSeenAt: v.number(),
+  }).index("by_visitorId", ["visitorId"]),
+
+  analyticsEvents: defineTable({
+    visitorId: v.string(),
+    userId: v.optional(v.id("users")), // if the same person later signs in
+    type: v.string(), // 'page_view' | 'attempt_save' | ...
+    workspaceId: v.optional(v.id("workspaces")),
+    diagramId: v.optional(v.id("diagrams")),
+    path: v.optional(v.string()),
+    meta: v.optional(v.any()),
+    ts: v.number(),
   }).index("by_visitorId", ["visitorId"]),
 });
