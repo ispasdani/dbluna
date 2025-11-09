@@ -79,4 +79,10 @@ export default defineSchema({
     features: v.optional(v.any()), // optional structured feature set
     createdAt: v.number(),
   }),
+
+  visitors: defineTable({
+    visitorId: v.string(), // UUID from cookie
+    createdAt: v.number(),
+    lastSeenAt: v.number(),
+  }).index("by_visitorId", ["visitorId"]),
 });
