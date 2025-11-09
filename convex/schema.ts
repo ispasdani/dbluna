@@ -73,4 +73,10 @@ export default defineSchema({
     snapToGrid: v.optional(v.boolean()),
     showGrid: v.optional(v.boolean()),
   }).index("by_user", ["userId"]),
+
+  plans: defineTable({
+    name: v.string(), // 'FREE' | 'PRO'
+    features: v.optional(v.any()), // optional structured feature set
+    createdAt: v.number(),
+  }),
 });
