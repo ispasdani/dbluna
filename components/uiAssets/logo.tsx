@@ -41,7 +41,9 @@ export const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-2">
       <LogoSVG />
-      <span className="text-2xl font-medium">DBLuna</span>
+      <span className="text-2xl font-medium">
+        <span className="text-brand">db</span>Luna
+      </span>
     </Link>
   );
 };
