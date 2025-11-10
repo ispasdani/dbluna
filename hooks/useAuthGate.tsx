@@ -1,47 +1,32 @@
 "use client";
-import { useState } from "react";
+
+import { toast } from "sonner";
 import { SignInButton } from "@clerk/nextjs";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 export function useAuthGate() {
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>("Sign in to save your work.");
-
   const run = async <T,>(fn: () => Promise<T>) => {
     try {
       return await fn();
-    } catch (e: any) {
-      if (
-        e?.data?.code === "ERR_AUTH_REQUIRED" ||
-        e?.code === "ERR_AUTH_REQUIRED"
-      ) {
-        setMessage(e.message ?? "Sign in to continue.");
-        setOpen(true);
+    } catch (e: unknown) {
+      const error = e as Error;
+      if (error.cause) {
+        toast.custom(() => (
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm text-white">
+              {error.message ?? "Sign in to save your work."}
+            </span>
+            <SignInButton mode="modal">
+              <button className="rounded-md bg-white/10 px-3 py-1 text-sm text-white hover:bg-white/20">
+                Sign in
+              </button>
+            </SignInButton>
+          </div>
+        ));
         return;
       }
       throw e;
     }
   };
 
-  const AuthDialog = () => (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{message}</DialogTitle>
-        </DialogHeader>
-        <SignInButton mode="modal">
-          <button className="w-full rounded-2xl px-4 py-2 shadow">
-            Sign in
-          </button>
-        </SignInButton>
-      </DialogContent>
-    </Dialog>
-  );
-
-  return { run, AuthDialog };
+  return { run };
 }

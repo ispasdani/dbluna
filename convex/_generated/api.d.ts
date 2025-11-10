@@ -8,7 +8,9 @@
  * @module
  */
 
+import type * as analytics from "../analytics.js";
 import type * as diagrams from "../diagrams.js";
+import type * as guards from "../guards.js";
 import type * as users from "../users.js";
 import type * as workspaceMembers from "../workspaceMembers.js";
 import type * as workspaces from "../workspaces.js";
@@ -28,7 +30,9 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  analytics: typeof analytics;
   diagrams: typeof diagrams;
+  guards: typeof guards;
   users: typeof users;
   workspaceMembers: typeof workspaceMembers;
   workspaces: typeof workspaces;
