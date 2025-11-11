@@ -12,9 +12,9 @@ import {
   useTransform,
 } from "motion/react";
 import { ModeToggle } from "./modeToggle";
-import { Logo } from "../uiAssets/logo";
 import { Container } from "./container";
 import { HamburgerIcon } from "@/components/uiAssets/hamburgerIcon";
+import { Logo2 } from "../uiAssets/logo2";
 
 const items = [
   {
@@ -49,7 +49,7 @@ const MobileNav = ({ items }: { items: { title: string; href: string }[] }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="relative flex items-center justify-between p-2 md:hidden">
-      <Logo />
+      <Logo2 />
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="shadow-aceternity flex size-6 flex-col items-center justify-center rounded-md"
@@ -72,7 +72,7 @@ const MobileNav = ({ items }: { items: { title: string; href: string }[] }) => {
             </div>
 
             <div className="flex items-center justify-between p-2">
-              <Logo />
+              <Logo2 />
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="shadow-aceternity flex size-6 flex-col items-center justify-center rounded-md"
@@ -125,7 +125,7 @@ const DesktopNav = ({
 }) => {
   return (
     <div className="hidden items-center justify-between px-4 py-4 md:flex">
-      <Logo />
+      <Logo2 />
       <div className="flex items-center gap-10">
         {items.map((item) => (
           <Link
@@ -166,7 +166,7 @@ const FloatingNav = ({
       style={{ y }}
       className="shadow-aceternity fixed inset-x-0 top-0 z-50 mx-auto hidden max-w-[calc(80rem-4rem)] items-center justify-between bg-white/80 px-2 py-2 backdrop-blur-sm md:flex xl:rounded-2xl dark:bg-neutral-900/80 dark:shadow-[0px_2px_0px_0px_var(--color-neutral-800),0px_-2px_0px_0px_var(--color-neutral-800)]"
     >
-      <Logo />
+      <Logo2 />
       <div className="flex items-center gap-10">
         {items.map((item) => (
           <Link
