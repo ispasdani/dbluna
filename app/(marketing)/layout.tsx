@@ -6,7 +6,7 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="h-screen w-full overflow-hidden">
+    <section className="h-screen w-full">
       <Navbar />
       {children}
     </section>
