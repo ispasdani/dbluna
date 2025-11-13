@@ -16,13 +16,13 @@ export const Hero = () => {
     <Container className="border-divide flex flex-col items-center justify-center border-x px-4 pt-10 pb-10 md:pt-32 md:pb-20">
       <Badge text="For fast moving engineering teams." />
       <Heading className="mt-4">
-        Manage and simulate <br /> agentic{" "}
-        <span className="text-brand">workflows</span>
+        Your All-in-One Tool <br /> for Database{" "}
+        <span className="text-brand">Workflow Design</span>
       </Heading>
 
       <SubHeading className="mx-auto mt-6 max-w-lg">
-        We empower developers and technical teams to create, simulate, and
-        manage AI-driven workflows visually
+        Draw database flows, write DSL, simulate queries, and create
+        documentation—fast. Designed for developers and data-driven teams.
       </SubHeading>
 
       <div className="mt-6 flex items-center gap-4">
