@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
-import { logos } from "@/constants/logos";
 import { Container } from "../general/container";
+import { logos } from "@/constants/logos";
 
 export const LogoCloud = () => {
-  // Track which logos are currently displayed (indices)
   const [displayedIndices, setDisplayedIndices] = useState<number[]>(() =>
     Array.from({ length: 8 }, (_, i) => i)
   );
@@ -15,8 +14,8 @@ export const LogoCloud = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const notDisplayedIndices = logos
-        .map((_, index) => index)
-        .filter((index) => !displayedIndices.includes(index));
+        .map((_: unknown, index: number) => index)
+        .filter((index: number) => !displayedIndices.includes(index));
 
       if (notDisplayedIndices.length > 0) {
         const randomDisplayedIndex = Math.floor(
@@ -38,7 +37,7 @@ export const LogoCloud = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [displayedIndices, logos]);
+  }, [displayedIndices]);
 
   return (
     <Container className="border-divide border-x">
