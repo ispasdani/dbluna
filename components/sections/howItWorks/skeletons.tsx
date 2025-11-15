@@ -69,6 +69,8 @@ export const ConnectYourTooklsSkeleton = () => {
   const [randomWidths] = useState(() => ({
     rightBar: Math.random() * 100,
     leftBars: Array.from({ length: 3 }, () => 20 + Math.random() * 20),
+    // Add target widths for the left bars animation
+    leftBarsTarget: Array.from({ length: 3 }, () => 70 + Math.random() * 30),
   }));
 
   useEffect(() => {
@@ -207,7 +209,7 @@ export const ConnectYourTooklsSkeleton = () => {
                 width: `${initialWidth}%`,
               }}
               animate={{
-                width: `${70 + Math.random() * 30}%`,
+                width: `${randomWidths.leftBarsTarget[index]}%`, // ✅ Use pre-generated value
               }}
               transition={{
                 duration: 4,
