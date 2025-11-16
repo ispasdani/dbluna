@@ -1,46 +1,46 @@
 export const logos = [
   {
-    title: "First",
+    title: "Google",
     src: "/logos/1.png",
     className: "h-10 w-auto ",
   },
   {
-    title: "Second",
+    title: "Microsoft",
     src: "/logos/2.png",
     className: "h-6 w-auto ",
   },
   {
-    title: "Third",
+    title: "IBM",
     src: "/logos/3.png",
     className: "h-6 w-auto ",
   },
   {
-    title: "Fourth",
+    title: "UBER",
     src: "/logos/4.png",
     className: "h-8 w-auto ",
   },
   {
-    title: "Fifth",
+    title: "ECOTECH-LAB",
     src: "/logos/5.png",
     className: "h-8 w-auto ",
   },
   {
-    title: "Sixth",
+    title: "Pixelfy",
     src: "/logos/6.png",
     className: "h-10 w-auto ",
   },
   {
-    title: "Seventh",
+    title: "PixelWizard",
     src: "/logos/7.png",
     className: "h-10 w-auto ",
   },
   {
-    title: "Eighth",
+    title: "Audiofy",
     src: "/logos/8.png",
     className: "h-10 w-auto ",
   },
   {
-    title: "Ninth",
+    title: "Ecoplast Hart",
     src: "/logos/9.png",
     className: "h-6 w-auto ",
   },

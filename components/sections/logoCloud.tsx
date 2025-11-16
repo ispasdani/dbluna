@@ -42,7 +42,7 @@ export const LogoCloud = () => {
   return (
     <Container className="border-divide border-x">
       <h2 className="py-8 text-center font-mono text-sm tracking-tight text-neutral-500 uppercase dark:text-gray-300">
-        Trusted by Fast Growing Startups
+        Used by developers with experience at companies like
       </h2>
       <div className="border-divide grid grid-cols-2 border-t md:grid-cols-4">
         {displayedIndices.map((logoIndex, position) => {
@@ -86,14 +86,14 @@ export const LogoCloud = () => {
                     opacity: 1,
                   }}
                 >
-                  <motion.img
-                    src={logo.src}
-                    alt={logo.title}
+                  <motion.p
                     className={cn(
                       "h-8 w-auto object-contain transition-all duration-500 dark:invert dark:filter",
                       logo.className
                     )}
-                  />
+                  >
+                    {logo.title}
+                  </motion.p>
                 </motion.div>
               </AnimatePresence>
             </div>
