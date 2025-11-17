@@ -24,25 +24,25 @@ type Tab = {
 export const HowItWorks = () => {
   const tabs = [
     {
-      title: "Design your Workflow",
+      title: "Design Visually or with Code",
       description:
-        "A drag-and-drop interface to create, connect, and configure agents into logical workflows",
+        "Drag-and-drop interface for visual thinkers or write in SQL/DBML for code lovers. Switch between modes seamlessly.",
       icon: FirstIcon,
       id: "workflow",
       skeleton: <DesignYourWorkflowSkeleton />,
     },
     {
-      title: "Connect your Tools",
+      title: "Generate Documentation Instantly",
       description:
-        "Agents operate independently and coordinate tasks to complete all complex goals together",
+        "Create professional database documentation that your whole team can understand.",
       icon: SecondIcon,
       id: "tools",
       skeleton: <ConnectYourTooklsSkeleton />,
     },
     {
-      title: "Deploy & Scale",
+      title: "Sandbox & Validate Workflows",
       description:
-        "Run agent workflows in a sandbox to preview behavior, debug logic, and test interactions",
+        "Real-time schema validation catches issues like missing primary keys or type mismatches. Test your table structures and relationships before committing to production.",
       icon: ThirdIcon,
       id: "deploy",
       skeleton: <DeployAndScaleSkeleton />,
@@ -66,11 +66,14 @@ export const HowItWorks = () => {
     <Container className="border-divide border-x">
       <div className="flex flex-col items-center pt-16">
         <Badge text="How it works" />
-        <SectionHeading className="mt-4">Integrates easily</SectionHeading>
+        <SectionHeading className="mt-4">
+          Built for humans, not just AI
+        </SectionHeading>
 
         <SubHeading as="p" className="mx-auto mt-6 max-w-lg">
-          We empower developers and technical teams to create, simulate, and
-          manage AI-driven workflows visually
+          Remember when designing databases meant thinking clearly, not
+          prompting endlessly? We bring back that clarity. Designed for
+          developers and data analysts who value control and precision.
         </SubHeading>
         {/* Desktop Tabs */}
         <div className="border-divide divide-divide mt-16 hidden w-full grid-cols-2 divide-x border-t lg:grid">
