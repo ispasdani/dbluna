@@ -1,8 +1,10 @@
 import { DivideX } from "@/components/general/divideX";
 import { HeroImage } from "@/components/general/heroImage";
+import { AgenticIntelligence } from "@/components/sections/agenticItelligence/agenticItenlligence";
 import { Hero } from "@/components/sections/hero";
 import { HowItWorks } from "@/components/sections/howItWorks/howItWorks";
 import { LogoCloud } from "@/components/sections/logoCloud";
+import { UseCases } from "@/components/sections/useCases";
 
 export default function Home() {
   return (
@@ -15,6 +17,10 @@ export default function Home() {
       <LogoCloud />
       <DivideX />
       <HowItWorks />
+      <DivideX />
+      <AgenticIntelligence />
+      <DivideX />
+      <UseCases />
       <DivideX />
     </main>
   );
