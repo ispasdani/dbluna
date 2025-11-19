@@ -5,6 +5,7 @@ import { Benefits } from "@/components/sections/benefits";
 import { Hero } from "@/components/sections/hero";
 import { HowItWorks } from "@/components/sections/howItWorks/howItWorks";
 import { LogoCloud } from "@/components/sections/logoCloud";
+import { Pricing } from "@/components/sections/pricing";
 import { UseCases } from "@/components/sections/useCases";
 
 export default function Home() {
@@ -24,6 +25,8 @@ export default function Home() {
       <UseCases />
       <DivideX />
       <Benefits />
+      <DivideX />
+      <Pricing />
       <DivideX />
     </main>
   );
