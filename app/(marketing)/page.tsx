@@ -8,6 +8,7 @@ import { HowItWorks } from "@/components/sections/howItWorks/howItWorks";
 import { LogoCloud } from "@/components/sections/logoCloud";
 import { Pricing } from "@/components/sections/pricing";
 import { UseCases } from "@/components/sections/useCases";
+import VideoSec from "@/components/sections/videoSec";
 
 export default function Home() {
   return (
@@ -30,6 +31,8 @@ export default function Home() {
       <Pricing />
       <DivideX />
       <FAQs />
+      <DivideX />
+      <VideoSec />
       <DivideX />
     </main>
   );
