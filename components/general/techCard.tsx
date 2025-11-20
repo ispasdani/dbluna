@@ -20,7 +20,7 @@ export const Card = ({
 }: {
   title: string;
   subtitle: string;
-  logo: React.ReactNode;
+  logo?: React.ReactNode;
   cta: React.ReactNode;
   tone: "default" | "danger" | "success";
   className?: string;
