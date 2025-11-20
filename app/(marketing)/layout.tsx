@@ -1,3 +1,4 @@
+import { Footer } from "@/components/general/footer";
 import { Navbar } from "@/components/general/navbar";
 
 export default function MarketingLayout({
@@ -9,6 +10,7 @@ export default function MarketingLayout({
     <section className="h-screen w-full">
       <Navbar />
       {children}
+      <Footer />
     </section>
   );
 }
