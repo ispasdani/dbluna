@@ -33,12 +33,12 @@ export const AgenticIntelligence = () => {
       <div className="flex flex-col items-center py-16">
         <Badge text="Features" />
         <SectionHeading className="mt-4">
-          Built for Agentic Intelligence
+          Professional Database Design Tools
         </SectionHeading>
 
         <SubHeading as="p" className="mx-auto mt-6 max-w-lg px-2">
-          Build, test and deploy AI agents with a powerful visual interface
-          designed for technical teams
+          Interactive canvas, intelligent validation, and multi-format export
+          for teams who build data-driven applications
         </SubHeading>
         <div className="border-divide divide-divide mt-16 grid grid-cols-1 divide-y border-y md:grid-cols-2 md:divide-x">
           <Card className="overflow-hidden mask-b-from-80%">
