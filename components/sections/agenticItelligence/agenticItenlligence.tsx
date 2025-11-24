@@ -55,11 +55,13 @@ export const AgenticIntelligence = () => {
           <Card className="overflow-hidden mask-b-from-80%">
             <div className="flex items-center gap-2">
               <MouseBoxIcon />
-              <CardTitle>Text to workflow builder</CardTitle>
+              <CardTitle>From Code to Canvas, Instantly</CardTitle>
             </div>
             <CardDescription>
-              Preview and debug workflow logic in a safe sandbox before
-              deploying, helping you iterate with confidence.
+              Skip the drag-and-drop. Write your schema in SQL or DBML, and your
+              diagram builds itself automatically. Define tables, set foreign
+              keys, establish relationships—all through code. The visual
+              representation syncs in real-time.
             </CardDescription>
             <TextToWorkflowBuilderSkeleton />
           </Card>
