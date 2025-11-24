@@ -58,10 +58,9 @@ export const AgenticIntelligence = () => {
               <CardTitle>From Code to Canvas, Instantly</CardTitle>
             </div>
             <CardDescription>
-              Skip the drag-and-drop. Write your schema in SQL or DBML, and your
-              diagram builds itself automatically. Define tables, set foreign
-              keys, establish relationships—all through code. The visual
-              representation syncs in real-time.
+              Write your schema in SQL or DBML, and your diagram builds itself
+              automatically. Define tables, set foreign keys, establish
+              relationships,all through code.
             </CardDescription>
             <TextToWorkflowBuilderSkeleton />
           </Card>

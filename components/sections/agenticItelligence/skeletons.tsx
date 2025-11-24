@@ -186,35 +186,22 @@ export const LLMModelSelectorSkeleton = () => {
 const TYPING_SPEED = 30;
 
 export const TextToWorkflowBuilderSkeleton = () => {
-  const initialChat = [
-    {
-      role: "user",
-      content: "Hello, how are you?",
-    },
-    {
-      role: "assistant",
-      content: "I'm good, thank you! How can I help you today?",
-    },
-    {
-      role: "user",
-      content:
-        "I want to create a workflow that will send an email to all my clients",
-    },
-    {
-      role: "assistant",
-      content: "Nah, do it yourself.",
-    },
-  ];
-
-  const [chat, setChat] = useState(initialChat);
+  const [chat, setChat] = useState<
+    { role: "user" | "assistant"; content: string }[]
+  >([]);
   const [inputText, setInputText] = useState("");
-  const [visibleMessages, setVisibleMessages] = useState(0);
-  const [currentMessageComplete, setCurrentMessageComplete] = useState(false);
   const [chatContainerRef, setChatContainerRef] =
     useState<HTMLDivElement | null>(null);
+  const [showTablePreview, setShowTablePreview] = useState(false);
 
-  const INITIAL_DELAY = 200;
-  const MESSAGE_DELAY = 400;
+  const [isDemoPlaying, setIsDemoPlaying] = useState(true);
+  const [demoIndex, setDemoIndex] = useState(0);
+
+  const DEMO_DBML =
+    "Table clients { id int [pk, increment], name varchar(255), email varchar(255), is_active bool, created_at datetime }";
+
+  const TYPING_DELAY = 40; // ms per character
+
   const RANDOM_MESSAGES = [
     "Do you really think I was gonna answer?",
     "I'm not a real assistant, I'm just a skeleton",
@@ -225,51 +212,67 @@ export const TextToWorkflowBuilderSkeleton = () => {
   ];
 
   const handleSendMessage = () => {
-    if (inputText.trim()) {
-      const newMessages = [
-        ...chat,
-        {
-          role: "user",
-          content: inputText.trim(),
-        },
-        {
-          role: "assistant",
-          content:
-            RANDOM_MESSAGES[Math.floor(Math.random() * RANDOM_MESSAGES.length)],
-        },
-      ];
-      setChat(newMessages);
-      setVisibleMessages(newMessages.length);
-      setInputText("");
-      setCurrentMessageComplete(false);
+    if (!inputText.trim()) return;
+
+    // If user interacts, kill the demo
+    if (isDemoPlaying) {
+      setIsDemoPlaying(false);
     }
+
+    const newMessages = [
+      ...chat,
+      {
+        role: "user" as const,
+        content: inputText.trim(),
+      },
+      {
+        role: "assistant" as const,
+        content:
+          RANDOM_MESSAGES[Math.floor(Math.random() * RANDOM_MESSAGES.length)],
+      },
+    ];
+
+    setChat(newMessages);
+    setInputText("");
+    setShowTablePreview(true); // still show table when user sends something
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       handleSendMessage();
     }
   };
 
+  // Demo typing effect in the input
   useEffect(() => {
+    if (!isDemoPlaying) return;
+
+    if (demoIndex >= DEMO_DBML.length) {
+      // Demo complete -> show table
+      setIsDemoPlaying(false);
+      setShowTablePreview(true);
+      return;
+    }
+
     const timer = setTimeout(() => {
-      setVisibleMessages(1);
-    }, INITIAL_DELAY);
+      const nextIndex = demoIndex + 1;
+      setDemoIndex(nextIndex);
+      setInputText(DEMO_DBML.slice(0, nextIndex));
+    }, TYPING_DELAY);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [demoIndex, isDemoPlaying, DEMO_DBML]);
 
-  useEffect(() => {
-    if (currentMessageComplete && visibleMessages < chat.length) {
-      const timer = setTimeout(() => {
-        setVisibleMessages((prev) => prev + 1);
-        setCurrentMessageComplete(false);
-      }, MESSAGE_DELAY);
-
-      return () => clearTimeout(timer);
+  // Stop demo if user manually types
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isDemoPlaying) {
+      setIsDemoPlaying(false);
     }
-  }, [currentMessageComplete, visibleMessages, chat.length]);
+    setInputText(e.target.value);
+  };
 
+  // Auto-scroll when chat or table changes
   useEffect(() => {
     if (chatContainerRef) {
       chatContainerRef.scrollTo({
@@ -277,16 +280,22 @@ export const TextToWorkflowBuilderSkeleton = () => {
         behavior: "smooth",
       });
     }
-  }, [visibleMessages, chatContainerRef]);
+  }, [chat, showTablePreview, chatContainerRef]);
+
+  // No typing effect for messages now; simple render
+  const handleMessageComplete = () => {
+    // no-op; kept for compatibility with UserMessage/AssistantMessage props
+  };
 
   return (
     <motion.div className="relative mx-auto mt-2 h-full max-h-70 min-h-40 w-[85%] p-4">
-      <div className="absolute inset-x-0 -bottom-4 mx-auto flex w-[85%] items-center justify-between rounded-lg border border-gray-300 bg-white shadow-[0px_2px_12px_0px_rgba(0,0,0,0.08)] dark:border-neutral-700 dark:bg-neutral-800">
+      {/* Input bar – same styling */}
+      <div className="absolute  inset-x-0 -bottom-4 mx-auto flex w-[93%] items-center justify-between rounded-lg border border-gray-300 bg-white shadow-[0px_2px_12px_0px_rgba(0,0,0,0.08)] dark:border-neutral-700 dark:bg-neutral-800">
         <input
           type="text"
           value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onChange={handleChangeInput}
+          onKeyDown={onKeyDown}
           className="flex-1 border-none px-4 py-4 text-xs placeholder-neutral-600 focus:outline-none"
           placeholder="Ask Notus AI"
         />
@@ -297,6 +306,8 @@ export const TextToWorkflowBuilderSkeleton = () => {
           </button>
         </div>
       </div>
+
+      {/* Scroll area – same styling */}
       <div
         ref={setChatContainerRef}
         className="mask-bg-gradient-to-b flex max-h-[calc(100%-1rem)] flex-col gap-4 overflow-y-auto from-white to-transparent mask-t-from-70% mask-b-from-70% pt-4 pb-16 dark:from-neutral-900 dark:to-transparent"
@@ -305,7 +316,8 @@ export const TextToWorkflowBuilderSkeleton = () => {
           msOverflowStyle: "none",
         }}
       >
-        {chat.slice(0, visibleMessages).map((message, index) => (
+        {/* Any user-triggered chat will still show here */}
+        {chat.map((message, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
@@ -316,18 +328,73 @@ export const TextToWorkflowBuilderSkeleton = () => {
             {message.role === "user" ? (
               <UserMessage
                 content={message.content}
-                isActive={index === visibleMessages - 1}
-                onComplete={() => setCurrentMessageComplete(true)}
+                isActive={false}
+                onComplete={handleMessageComplete}
               />
             ) : (
               <AssistantMessage
                 content={message.content}
-                isActive={index === visibleMessages - 1}
-                onComplete={() => setCurrentMessageComplete(true)}
+                isActive={false}
+                onComplete={handleMessageComplete}
               />
             )}
           </motion.div>
         ))}
+
+        {/* Same table preview as before */}
+        {showTablePreview && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="mt-2 w-full rounded-lg border border-gray-200 bg-white p-4 text-xs shadow-[0px_2px_12px_0px_rgba(0,0,0,0.08)] dark:border-neutral-700 dark:bg-neutral-900"
+          >
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+              Preview:{" "}
+              <span className="font-bold text-neutral-800 dark:text-neutral-100">
+                clients
+              </span>
+            </div>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b border-gray-200 text-[11px] font-medium text-neutral-600 dark:border-neutral-700 dark:text-neutral-300">
+                  <th className="px-2 py-1 text-left">Column</th>
+                  <th className="px-2 py-1 text-left">Type</th>
+                  <th className="px-2 py-1 text-left">Key</th>
+                </tr>
+              </thead>
+              <tbody className="text-[11px] text-neutral-800 dark:text-neutral-100">
+                <tr className="border-b border-gray-100 dark:border-neutral-800">
+                  <td className="px-2 py-1 font-mono">id</td>
+                  <td className="px-2 py-1 font-mono">int</td>
+                  <td className="px-2 py-1 text-[10px] uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+                    PK • auto-increment
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-100 dark:border-neutral-800">
+                  <td className="px-2 py-1 font-mono">name</td>
+                  <td className="px-2 py-1 font-mono">varchar(255)</td>
+                  <td className="px-2 py-1 text-[10px] text-neutral-400">—</td>
+                </tr>
+                <tr className="border-b border-gray-100 dark:border-neutral-800">
+                  <td className="px-2 py-1 font-mono">email</td>
+                  <td className="px-2 py-1 font-mono">varchar(255)</td>
+                  <td className="px-2 py-1 text-[10px] text-neutral-400">—</td>
+                </tr>
+                <tr className="border-b border-gray-100 dark:border-neutral-800">
+                  <td className="px-2 py-1 font-mono">is_active</td>
+                  <td className="px-2 py-1 font-mono">bool</td>
+                  <td className="px-2 py-1 text-[10px] text-neutral-400">—</td>
+                </tr>
+                <tr>
+                  <td className="px-2 py-1 font-mono">created_at</td>
+                  <td className="px-2 py-1 font-mono">datetime</td>
+                  <td className="px-2 py-1 text-[10px] text-neutral-400">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
