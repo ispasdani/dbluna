@@ -555,7 +555,7 @@ export const NativeToolsIntegrationSkeleton = () => {
  * Tiny stylized “table” icon that fits inside existing IconBlock
  * without changing any of your layout/styling.
  */
-const MiniTable = ({
+export const MiniTable = ({
   label,
   compact = false,
 }: {
@@ -570,7 +570,11 @@ const MiniTable = ({
       ].join(" ")}
     >
       {/* header bar */}
-      <div className="h-2.5 w-full bg-neutral-100 dark:bg-neutral-800" />
+      <div className="h-4 w-full bg-neutral-100 dark:bg-neutral-800 flex justify-center items-center">
+        <div className="rounded-sm bg-blue-50 px-1 text-[8px] font-medium text-blue-600 dark:bg-blue-900 dark:text-white">
+          {label}
+        </div>
+      </div>
 
       {/* schema rows */}
       <div className="flex flex-1 flex-col px-1 py-0.5 text-[8px] leading-tight">
@@ -593,9 +597,6 @@ const MiniTable = ({
       </div>
 
       {/* label chip */}
-      <div className="absolute bottom-0.5 left-0.5 rounded-sm bg-blue-50 px-1 text-[8px] font-medium text-blue-600 dark:bg-blue-900 dark:text-white">
-        {label}
-      </div>
     </div>
   );
 };

@@ -21,43 +21,45 @@ import { IconBlock } from "../general/iconBlock";
 import { OpenAILogo, SlackLogo } from "../ui/generalcons";
 import { HorizontalLine } from "../general/horizontalLine";
 import { VerticalLine } from "../general/verticalLine";
+import { TableBlock } from "../general/tableBlock";
+import { MiniTable } from "./agenticItelligence/skeletons";
 
 export const Benefits = () => {
   const benefits = [
     {
-      title: "Launch Faster",
+      title: "Design Faster",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Build database schemas visually with drag-and-drop or code - whichever you prefer",
       icon: <RocketIcon className="text-brand size-6" />,
     },
     {
-      title: "Iterate Rapidly",
+      title: "Collaborate Better",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Share schemas with your team, manage access levels, and work together in real-time",
       icon: <RealtimeSyncIcon className="text-brand size-6" />,
     },
     {
-      title: "Scale Smarter",
+      title: "Export Anywhere",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Generate SQL, DBML, or documentation instantly for any database platform",
       icon: <GraphIcon className="text-brand size-6" />,
     },
     {
-      title: "Reuse Intelligence",
+      title: "Reuse Templates",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Start from pre-built schemas for common use cases and customize to your needs",
       icon: <ReuseBrainIcon className="text-brand size-6" />,
     },
     {
-      title: "Prevent Breakdowns",
+      title: "Catch Issues Early",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Validate relationships and constraints automatically before deploying to production",
       icon: <ShieldIcon className="text-brand size-6" />,
     },
     {
-      title: "Automate More",
+      title: "Iterate Quickly",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Make changes instantly and see how they affect your entire schema in real-time",
       icon: <ScreenCogIcon className="text-brand size-6" />,
     },
   ];
@@ -66,12 +68,12 @@ export const Benefits = () => {
       <div className="relative flex flex-col items-center">
         <Badge text="Benefits" />
         <SectionHeading className="mt-4">
-          Making Engineers 10x faster
+          Making Database Design Effortless
         </SectionHeading>
 
         <SubHeading as="p" className="mx-auto mt-6 max-w-lg">
-          We empower developers and technical teams to create, simulate, and
-          manage AI-driven workflows visually
+          Design, document, and deploy database schemas faster with visual tools
+          and instant code generation
         </SubHeading>
       </div>
       <div className="mt-20 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -92,7 +94,7 @@ export const Benefits = () => {
 };
 
 const MiddleCard = () => {
-  const texts = ["Meeting created", "Chat history saved", "You talking to me"];
+  const texts = ["Schema exported", "Table created", "Relationship added"];
   const [activeText, setActiveText] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -105,8 +107,11 @@ const MiddleCard = () => {
       <div className="absolute inset-0 bg-[radial-gradient(var(--color-dots)_1px,transparent_1px)] mask-radial-from-10% [background-size:10px_10px] shadow-xl"></div>
 
       <div className="flex items-center justify-center">
-        <IconBlock icon={<OpenAILogo className="size-6" />} />
+        {/* OpenAI logo -> table */}
+        <TableBlock icon={<MiniTable label="ai_models" compact />} />
+
         <HorizontalLine />
+
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-gray-200 p-px shadow-xl dark:bg-neutral-700">
           <div className="absolute inset-0 scale-[1.4] animate-spin rounded-full bg-conic [background-image:conic-gradient(at_center,transparent,var(--color-blue-500)_20%,transparent_30%)] [animation-duration:2s]"></div>
           <div className="via-brand absolute inset-0 scale-[1.4] animate-spin rounded-full bg-conic [background-image:conic-gradient(at_center,transparent,var(--color-brand)_20%,transparent_30%)] [animation-delay:1s] [animation-duration:2s]"></div>
@@ -114,15 +119,20 @@ const MiddleCard = () => {
             <LogoSVG />
           </div>
         </div>
+
         <HorizontalLine />
-        <IconBlock icon={<SlackLogo className="size-6" />} />
+
+        {/* Slack logo -> table */}
+        <TableBlock icon={<MiniTable label="events" compact />} />
       </div>
+
       <div className="relative z-20 flex flex-col items-center justify-center">
         <VerticalLine />
         <div className="rounded-sm border border-blue-500 bg-blue-50 px-2 py-0.5 text-xs text-blue-500 dark:bg-blue-900 dark:text-white">
           Connected
         </div>
       </div>
+
       <div className="h-60 w-full translate-x-10 translate-y-10 overflow-hidden rounded-md bg-gray-200 p-px shadow-xl dark:bg-neutral-700">
         <div className="absolute inset-0 scale-[1.4] animate-spin rounded-full bg-conic from-transparent via-blue-500 via-20% to-transparent to-30% blur-2xl [animation-duration:4s]"></div>
         <div className="via-brand absolute inset-0 scale-[1.4] animate-spin rounded-full bg-conic from-transparent via-20% to-transparent to-30% blur-2xl [animation-delay:2s] [animation-duration:4s]"></div>
@@ -157,9 +167,9 @@ const MiddleCard = () => {
 
               <div className="mt-4 flex flex-col gap-y-3 mask-b-from-50%">
                 {[
-                  { label: "API Calls", width: 85 },
-                  { label: "Success Rate", width: 92 },
-                  { label: "Workflows", width: 65 },
+                  { label: "Tables Created", width: 85 },
+                  { label: "Relationships", width: 92 },
+                  { label: "Team Members", width: 65 },
                 ].map((item, index) => (
                   <div key={item.label} className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
