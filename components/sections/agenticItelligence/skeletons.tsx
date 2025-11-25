@@ -24,6 +24,7 @@ import { DivideX } from "@/components/general/divideX";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { LogoSVG } from "@/components/uiAssets/logo2";
 import { IconBlock } from "@/components/general/iconBlock";
+import { TableBlock } from "@/components/general/tableBlock";
 
 export const LLMModelSelectorSkeleton = () => {
   const models = [
@@ -479,28 +480,33 @@ const AssistantMessage = ({
 export const NativeToolsIntegrationSkeleton = () => {
   return (
     <>
+      {/* Mobile / small screens illustration stays untouched */}
       <div className="relative mx-auto my-24 h-full w-full scale-[2] sm:scale-[1.5] md:scale-[1.2] lg:hidden">
         <Image
-          src="/illustrations/native-tools-integration.svg"
-          alt="Native Tools Integration"
+          src="/images/nativeVisualSchemaBuilder.png"
+          alt="Native Visual Schema Builder"
           width={1200}
           height={1200}
           className="dark:invert dark:filter"
         />
       </div>
+
+      {/* Desktop layout stays untouched, only inner icons swapped */}
       <motion.div className="relative mx-auto my-12 hidden h-full max-h-70 min-h-80 max-w-[67rem] grid-cols-2 p-4 lg:grid">
-        <div className="flex items-center justify-between">
+        <div className="hidden md:flex items-center justify-between ">
           <div className="flex flex-col gap-10">
-            <TextIconBlock icon={<WindowIcon />} text="Meeting Summarizer">
+            <TextIconBlock icon={<WindowIcon />} text="Drag & Drop Tables">
               <TopSVG className="absolute top-2 -right-84" />
             </TextIconBlock>
-            <TextIconBlock icon={<CodeIcon />} text="Code Reviewer">
+            <TextIconBlock icon={<CodeIcon />} text="Define Columns">
               <MiddleSVG className="absolute top-2 -right-84" />
             </TextIconBlock>
-            <TextIconBlock icon={<PhoneIcon />} text="Customer Support">
+            <TextIconBlock icon={<PhoneIcon />} text="Map Relationships">
               <BottomSVG className="absolute -right-84 bottom-2" />
             </TextIconBlock>
           </div>
+
+          {/* Center "connection" node stays untouched */}
           <div className="relative h-16 w-16 overflow-hidden rounded-md bg-gray-200 p-px shadow-xl dark:bg-neutral-700">
             <div className="absolute inset-0 scale-[1.4] animate-spin rounded-full bg-conic [background-image:conic-gradient(at_center,transparent,var(--color-blue-500)_20%,transparent_30%)] [animation-duration:2s]"></div>
             <div className="absolute inset-0 scale-[1.4] animate-spin rounded-full [background-image:conic-gradient(at_center,transparent,var(--color-brand)_20%,transparent_30%)] [animation-delay:1s] [animation-duration:2s]"></div>
@@ -509,31 +515,91 @@ export const NativeToolsIntegrationSkeleton = () => {
             </div>
           </div>
         </div>
+
         <div className="relative flex h-full w-full items-center justify-start">
           <RightSideSVG />
+
+          {/* Connected badge stays */}
           <div className="relative flex flex-col items-center gap-2">
             <span className="relative z-20 rounded-sm border border-blue-500 bg-blue-50 px-2 py-0.5 text-xs text-blue-500 dark:bg-blue-900 dark:text-white">
               Connected
             </span>
+
+            {/* Column of “tables” instead of product logos */}
             <div className="absolute inset-x-0 -top-30 flex h-full flex-col items-center">
-              <IconBlock icon={<NotionLogo className="size-6" />} />
+              <TableBlock icon={<MiniTable label="users" />} />
               <VerticalLine />
               <VerticalLine />
-              <IconBlock icon={<LinearLogo className="size-6" />} />
+              <TableBlock icon={<MiniTable label="projects" />} />
             </div>
           </div>
-          <div className="2 absolute -top-4 right-30 flex h-full flex-col items-center">
-            <IconBlock icon={<SupabaseLogo className="size-6" />} />
+
+          {/* Second column of “tables” instead of product logos */}
+          <div className="absolute -top-4 right-30 flex h-full flex-col items-center">
+            <TableBlock icon={<MiniTable label="tasks" />} />
             <VerticalLine />
-            <IconBlock icon={<SlackLogo className="size-6" />} />
+            <TableBlock icon={<MiniTable label="comments" />} />
           </div>
+
           <RightSideSVG />
-          <IconBlock icon={<OpenAILogo className="size-6" />} />
+
+          {/* Final “table” instead of OpenAI logo */}
+          <TableBlock icon={<MiniTable label="relations" compact />} />
         </div>
       </motion.div>
     </>
   );
 };
+
+/**
+ * Tiny stylized “table” icon that fits inside existing IconBlock
+ * without changing any of your layout/styling.
+ */
+const MiniTable = ({
+  label,
+  compact = false,
+}: {
+  label: string;
+  compact?: boolean;
+}) => {
+  return (
+    <div
+      className={[
+        "relative flex flex-col overflow-hidden rounded-md border border-neutral-200 bg-white shadow-sm w-3/4 h-3/4",
+        "dark:border-neutral-700 dark:bg-neutral-900",
+      ].join(" ")}
+    >
+      {/* header bar */}
+      <div className="h-2.5 w-full bg-neutral-100 dark:bg-neutral-800" />
+
+      {/* schema rows */}
+      <div className="flex flex-1 flex-col px-1 py-0.5 text-[8px] leading-tight">
+        <div className="flex items-center justify-between border-t border-neutral-200 py-0.5 dark:border-neutral-700">
+          <span className="text-neutral-700 dark:text-neutral-200">id</span>
+          <span className="text-neutral-400 dark:text-neutral-500">PK</span>
+        </div>
+        <div className="flex items-center justify-between border-t border-neutral-200 py-0.5 dark:border-neutral-700">
+          <span className="text-neutral-700 dark:text-neutral-200">
+            {label === "relations" ? "from_id" : "name"}
+          </span>
+          <span className="text-neutral-400 dark:text-neutral-500">text</span>
+        </div>
+        <div className="flex items-center justify-between border-t border-neutral-200 py-0.5 dark:border-neutral-700">
+          <span className="text-neutral-700 dark:text-neutral-200">
+            {label === "relations" ? "to_id" : "created_at"}
+          </span>
+          <span className="text-neutral-400 dark:text-neutral-500">ts</span>
+        </div>
+      </div>
+
+      {/* label chip */}
+      <div className="absolute bottom-0.5 left-0.5 rounded-sm bg-blue-50 px-1 text-[8px] font-medium text-blue-600 dark:bg-blue-900 dark:text-white">
+        {label}
+      </div>
+    </div>
+  );
+};
+
 const VerticalLine = (
   props: React.SVGProps<SVGSVGElement> & { stopColor?: string }
 ) => {

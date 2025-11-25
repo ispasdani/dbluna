@@ -19,6 +19,7 @@ import {
   NativeToolsIntegrationSkeleton,
   TextToWorkflowBuilderSkeleton,
 } from "./skeletons";
+import { FileText, FlaskConical, Users } from "lucide-react";
 
 type Tab = {
   title: string;
@@ -47,14 +48,15 @@ export const AgenticIntelligence = () => {
               <CardTitle>LLM Model Selector</CardTitle>
             </div>
             <CardDescription>
-              Track real-time activity of agents with detailed records of
-              triggers, tools used, outcomes, and timestamps.
+              Start fast with built-in models or bring your own API keys for
+              custom providers—seamlessly switch between options as your needs
+              evolve.
             </CardDescription>
             <LLMModelSelectorSkeleton />
           </Card>
           <Card className="overflow-hidden mask-b-from-80%">
             <div className="flex items-center gap-2">
-              <MouseBoxIcon />
+              <NativeIcon />
               <CardTitle>From Code to Canvas, Instantly</CardTitle>
             </div>
             <CardDescription>
@@ -69,12 +71,12 @@ export const AgenticIntelligence = () => {
           <Card className="relative w-full max-w-none overflow-hidden">
             <div className="pointer-events-none absolute inset-0 h-full w-full bg-[radial-gradient(var(--color-dots)_1px,transparent_1px)] mask-radial-from-10% [background-size:10px_10px]"></div>
             <div className="flex items-center gap-2">
-              <NativeIcon />
-              <CardTitle>Native Tools Integration</CardTitle>
+              <MouseBoxIcon />
+              <CardTitle>Native Visual Schema Builder</CardTitle>
             </div>
             <CardDescription>
-              Track real-time activity of agents with detailed records of
-              triggers, tools used, outcomes, and timestamps.
+              Design your database structure intuitively with drag-and-drop
+              tables, columns, and relationships—no code required.
             </CardDescription>
             <NativeToolsIntegrationSkeleton />
           </Card>
@@ -82,32 +84,32 @@ export const AgenticIntelligence = () => {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <Card>
             <div className="flex items-center gap-2">
-              <FingerprintIcon />
-              <CardTitle>One Click Auth</CardTitle>
+              <FileText className="w-6 h-6" />
+              <CardTitle>Instant Documentation</CardTitle>
             </div>
             <CardDescription>
-              A drag-and-drop interface to create, connect, and configure agents
-              into logical workflows
+              Automatically generate comprehensive database documentation with
+              schema diagrams, table relationships, and field descriptions
             </CardDescription>
           </Card>
           <Card>
             <div className="flex items-center gap-2">
-              <RealtimeSyncIcon />
-              <CardTitle>Realtime Sync</CardTitle>
+              <FlaskConical className="w-6 h-6" />
+              <CardTitle>Interactive Playground</CardTitle>
             </div>
             <CardDescription>
-              Agents operate independently and coordinate tasks to complete
-              complex all goals
+              Test queries, simulate data, and validate your schema in a safe
+              sandbox environment before deployment
             </CardDescription>
           </Card>
           <Card>
             <div className="flex items-center gap-2">
-              <SDKIcon />
-              <CardTitle>Custom Connector SDK</CardTitle>
+              <Users className="w-6 h-6" />
+              <CardTitle>Real-Time Collaboration</CardTitle>
             </div>
             <CardDescription>
-              Run agent workflows in a sandbox to preview behavior, debug logic,
-              and test interactions
+              Design schemas together with your team through live cursor
+              tracking, instant updates, and seamless synchronization
             </CardDescription>
           </Card>
         </div>
