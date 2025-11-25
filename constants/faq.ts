@@ -1,32 +1,32 @@
 export const faqs = [
   {
-    question: "What exactly does this platform do?",
+    question: "What is this tool and what does it do?",
     answer:
-      "Our platform lets you design, deploy, and manage AI-powered agentic workflows that can combine both automated (AI) and manual steps. These workflows connect to your existing tools (like Slack, Notion, or Google Sheets) and use AI agents to complete tasks.",
+      "Our platform is a visual database schema design tool that lets you create, document, and export database schemas. Design schemas visually with drag-and-drop or write them in SQL/DBML code. Generate documentation instantly and export to multiple formats including SQL, DBML, and visual diagrams.",
   },
   {
-    question: "How do I get started with creating my first workflow?",
+    question: "How do I create my first database schema?",
     answer:
-      "Start by using our drag-and-drop interface to design your workflow. Connect the tools you already use, define the steps (both AI and manual), and test everything in our sandbox environment before deploying. No coding required.",
+      "Start by adding tables to the canvas using the 'Add Table' button. Click on a table to add columns, set data types, and define constraints. Connect tables by creating relationships between them. You can also switch to code mode to write your schema in SQL or DBML format.",
   },
   {
-    question: "What tools and services can I integrate?",
+    question: "What export formats are supported?",
     answer:
-      "We support hundreds of integrations including Slack, Notion, Google Workspace, Salesforce, GitHub, Zapier, and many more. You can also connect custom APIs and databases through our flexible connector system.",
+      "We support multiple export formats including PostgreSQL, MySQL, SQLite, SQL Server, and Oracle SQL. You can also export to DBML format or generate visual documentation. Each export preserves your schema structure, relationships, and constraints.",
   },
   {
-    question: "Is my data secure when using AI agents?",
+    question: "Can I collaborate with my team on schemas?",
     answer:
-      "Yes, we take security seriously. All data is encrypted in transit and at rest, we're SOC 2 compliant, and you maintain full control over what data your agents can access. Agents only interact with the specific tools and data you explicitly authorize.",
+      "Yes! Share your workspace with team members and collaborate in real-time. Each member can have different roles (owner, admin, editor, viewer) to control access levels. Multiple people can work on the same schema simultaneously with instant sync.",
   },
   {
-    question: "Can I test workflows before they go live?",
+    question: "Can I import existing database schemas?",
     answer:
-      "Absolutely. Our sandbox environment lets you preview and debug workflow logic safely before deployment. You can test different scenarios, validate agent behavior, and ensure everything works as expected without affecting your live systems.",
+      "Absolutely. Paste your existing SQL or DBML code into the code editor, and we'll automatically parse and visualize your schema. We support imports from PostgreSQL, MySQL, and other major database dialects, converting them into visual diagrams you can edit.",
   },
   {
-    question: "What's the difference between automated and manual steps?",
+    question: "What's the difference between visual and code modes?",
     answer:
-      "Automated steps are handled entirely by AI agents (like data analysis, content generation, or API calls), while manual steps require human input or approval. You can mix both types to create workflows that leverage AI efficiency while maintaining human oversight where needed.",
+      "Visual mode lets you design schemas using drag-and-drop interface with tables, relationships, and areas. Code mode provides a text editor where you can write SQL or DBML directly. Both modes stay in sync - changes in one automatically update the other, giving you flexibility to work however you prefer.",
   },
 ];

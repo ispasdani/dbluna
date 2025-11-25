@@ -14,6 +14,7 @@ const isPublicRoute = createRouteMatcher([
   "/w/(.*)", // your public workspace route
   "/clerk(.*)", // Convex webhook endpoint
   "/api/(.*)", // keep public unless otherwise needed
+  "/userDocs(.*)",
 ]);
 
 export default clerkMiddleware(
