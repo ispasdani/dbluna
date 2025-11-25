@@ -18,39 +18,39 @@ import { Scale } from "../general/scale";
 export const UseCases = () => {
   const useCases = [
     {
-      title: "DevOps",
+      title: "Backend Development",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Design and visualize database schemas before writing migration code",
       icon: <DevopsIcon className="text-brand size-6" />,
     },
     {
-      title: "SalesOps",
+      title: "Data Architecture",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Plan complex data models and relationships with visual clarity",
       icon: <GraphIcon className="text-brand size-6" />,
     },
     {
-      title: "Supply Chain",
+      title: "Startup MVPs",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Rapidly prototype database structures and iterate on data models",
       icon: <TruckIcon className="text-brand size-6" />,
     },
     {
-      title: "Customer Support",
+      title: "Team Collaboration",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Work together on schema design with real-time synchronization",
       icon: <PhoneIcon className="text-brand size-6" />,
     },
     {
-      title: "DataOps",
+      title: "Database Migration",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Generate SQL scripts for multiple databases from visual designs",
       icon: <DatabaseIcon className="text-brand size-6" />,
     },
     {
-      title: "FinOps",
+      title: "Documentation",
       description:
-        "Visually orchestrate autonomous agents without writing boilerplate code",
+        "Create professional database documentation automatically from schemas",
       icon: <WalletIcon className="text-brand size-6" />,
     },
   ];
@@ -64,8 +64,8 @@ export const UseCases = () => {
         </SectionHeading>
 
         <SubHeading as="p" className="mx-auto mt-6 max-w-lg">
-          We empower developers and technical teams to create, simulate, and
-          manage AI-driven workflows visually
+          We empower developers and technical teams to design, visualize,
+          simulate and document database schemas efficiently
         </SubHeading>
 
         <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
