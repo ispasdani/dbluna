@@ -1,0 +1,348 @@
+export const frontmatter = {
+  title: "Mastering Database Relationships: A Complete Guide",
+  description:
+    "Learn how to design effective database relationships including one-to-one, one-to-many, and many-to-many patterns. Understand foreign keys, junction tables, and best practices for scalable schema design.",
+  image: "/blog/database-relationships.webp",
+  date: "2024-02-15",
+  authorName: "Manu Arora",
+  authorSrc: "/avatars/manu.png",
+};
+
+# Mastering Database Relationships: A Complete Guide
+
+Database relationships are the backbone of relational database design...
+
+## Understanding Relationship Types
+
+### 1. One-to-One Relationships
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  username VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE user_profiles (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER UNIQUE NOT NULL,
+  bio TEXT,
+  avatar_url VARCHAR(500),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+```
+
+### 2. One-to-Many Relationships
+
+```sql
+CREATE TABLE authors (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE books (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(500) NOT NULL,
+  author_id INTEGER NOT NULL,
+  published_date DATE,
+  FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE RESTRICT
+);
+```
+
+### Many-to-Many Relationships
+
+1. Using Junction Tables
+
+```sql
+CREATE TABLE students (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE courses (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+code VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE enrollments (
+student_id INTEGER NOT NULL,
+course_id INTEGER NOT NULL,
+enrollment_date DATE DEFAULT CURRENT_DATE,
+grade VARCHAR(2),
+PRIMARY KEY (student_id, course_id),
+FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE);
+```
+
+2. Junction Tables with Additional Data
+
+```sql
+CREATE TABLE projects (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+deadline DATE
+);
+
+CREATE TABLE employees (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+department VARCHAR(100)
+);
+
+CREATE TABLE project_assignments (
+project_id INTEGER NOT NULL,
+employee_id INTEGER NOT NULL,
+role VARCHAR(100),
+hours_allocated INTEGER,
+start_date DATE,
+PRIMARY KEY (project_id, employee_id),
+FOREIGN KEY (project_id) REFERENCES projects(id),
+FOREIGN KEY (employee_id) REFERENCES employees(id)
+);
+```
+
+Foreign Key Constraints
+
+1. Cascade Operations
+
+```sql
+-- ON DELETE CASCADE: Delete child records when parent is deleted
+CREATE TABLE orders (
+id SERIAL PRIMARY KEY,
+customer_id INTEGER NOT NULL,
+order_date DATE DEFAULT CURRENT_DATE,
+FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+-- ON DELETE SET NULL: Set foreign key to NULL when parent is deleted
+CREATE TABLE products (
+id SERIAL PRIMARY KEY,
+category_id INTEGER,
+name VARCHAR(255) NOT NULL,
+FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+```
+
+); 2. Restrict and No Action
+
+```sql
+-- ON DELETE RESTRICT: Prevent deletion if child records exist
+CREATE TABLE departments (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE employees (
+id SERIAL PRIMARY KEY,
+department_id INTEGER NOT NULL,
+name VARCHAR(255) NOT NULL,
+FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE RESTRICT
+);
+```
+
+Self-Referencing Relationships
+
+1. Hierarchical Data
+
+```sql
+CREATE TABLE employees (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+manager_id INTEGER,
+title VARCHAR(100),
+FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
+);
+```
+
+2. Tree Structures
+
+```sql
+CREATE TABLE categories (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+parent_id INTEGER,
+level INTEGER DEFAULT 0,
+FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE CASCADE);
+```
+
+Advanced Relationship Patterns
+
+1. Polymorphic Relationships
+
+```sql
+CREATE TABLE comments (
+id SERIAL PRIMARY KEY,
+content TEXT NOT NULL,
+commentable_type VARCHAR(50) NOT NULL,
+commentable_id INTEGER NOT NULL,
+user_id INTEGER NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+-- Can reference posts, photos, videos, etc. 2. Conditional Relationships
+
+```sql
+CREATE TABLE payments (
+id SERIAL PRIMARY KEY,
+amount DECIMAL(10, 2) NOT NULL,
+payment_method VARCHAR(50),
+credit_card_id INTEGER,
+bank_account_id INTEGER,
+FOREIGN KEY (credit_card_id) REFERENCES credit_cards(id),
+FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id),
+CHECK (
+(payment_method = 'credit_card' AND credit_card_id IS NOT NULL) OR
+(payment_method = 'bank_transfer' AND bank_account_id IS NOT NULL)
+)
+);
+```
+
+Indexing Relationships
+
+1. Foreign Key Indexes
+
+```sql
+CREATE TABLE order_items (
+id SERIAL PRIMARY KEY,
+order_id INTEGER NOT NULL,
+product_id INTEGER NOT NULL,
+quantity INTEGER NOT NULL,
+price DECIMAL(10, 2) NOT NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id),
+FOREIGN KEY (product_id) REFERENCES products(id)
+);
+```
+
+-- Create indexes for foreign keys
+
+```sql
+CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX idx_order_items_product_id ON order_items(product_id);
+```
+
+2. Composite Indexes
+
+```sql
+CREATE INDEX idx_enrollments_composite
+ON enrollments(student_id, course_id, enrollment_date);
+Relationship Design Best Practices
+```
+
+1. Naming Conventions
+
+-- Use clear, descriptive foreign key names
+
+```sql
+ALTER TABLE posts
+ADD CONSTRAINT fk_posts_author_id
+FOREIGN KEY (author_id) REFERENCES users(id);
+```
+
+-- Use consistent naming patterns
+-- Pattern: fk*\{table\}*\{column\}
+
+2. Avoiding Circular Dependencies
+
+-- AVOID THIS:
+
+```sql
+CREATE TABLE table_a (
+id SERIAL PRIMARY KEY,
+b_id INTEGER REFERENCES table_b(id)
+);
+
+CREATE TABLE table_b (
+id SERIAL PRIMARY KEY,
+a_id INTEGER REFERENCES table_a(id)
+);
+```
+
+-- BETTER: Use a junction table or redesign schema
+Querying Relationships
+
+1. JOIN Operations
+
+```sql
+
+-- INNER JOIN: Get matching records
+SELECT orders.id, customers.name, orders.total
+FROM orders
+INNER JOIN customers ON orders.customer_id = customers.id;
+
+-- LEFT JOIN: Include all parent records
+SELECT categories.name, COUNT(products.id) as product_count
+FROM categories
+LEFT JOIN products ON categories.id = products.category_id
+GROUP BY categories.id, categories.name; 2. Subqueries with Relationships
+
+```
+
+-- Find customers with more than 5 orders
+
+```sql
+SELECT name, email
+FROM customers
+WHERE id IN (
+SELECT customer_id
+FROM orders
+GROUP BY customer_id
+HAVING COUNT(\*) > 5
+);
+```
+
+Performance Optimization
+
+1. Denormalization for Performance
+
+-- Add redundant data for faster queries
+
+```sql
+CREATE TABLE orders (
+id SERIAL PRIMARY KEY,
+customer_id INTEGER NOT NULL,
+customer_name VARCHAR(255), -- Denormalized
+total_amount DECIMAL(10, 2),
+FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+```
+
+2. Materialized Views
+
+```sql
+CREATE MATERIALIZED VIEW order_summaries AS
+SELECT
+c.id as customer_id,
+c.name,
+COUNT(o.id) as total_orders,
+SUM(o.total_amount) as total_spent
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name;
+```
+
+-- Refresh periodically
+REFRESH MATERIALIZED VIEW order_summaries;
+Common Pitfalls to Avoid
+
+Missing foreign key indexes leading to slow queries
+Using ON DELETE CASCADE without understanding implications
+Creating circular dependencies between tables
+Over-normalizing leading to excessive joins
+Not considering NULL handling in relationships
+Best Practices Summary
+
+Always define foreign key constraints explicitly
+Choose appropriate ON DELETE and ON UPDATE actions
+Index all foreign key columns
+Use junction tables for many-to-many relationships
+Document complex relationships clearly
+Consider query performance when designing relationships
+Use consistent naming conventions
+Validate relationships visually using schema diagrams
+Conclusion
+
+Mastering database relationships is essential for creating robust, scalable database schemas. By understanding the different relationship types, foreign key constraints, and best practices, you can design databases that are efficient, maintainable, and aligned with your application's needs. Use visual schema design tools to map out relationships before implementation, and always test your schema with realistic data volumes.
