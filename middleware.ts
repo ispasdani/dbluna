@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/clerk(.*)", // Convex webhook endpoint
   "/api/(.*)", // keep public unless otherwise needed
   "/userDocs(.*)",
+  "/blog(.*)",
 ]);
 
 export default clerkMiddleware(
