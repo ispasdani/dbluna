@@ -1,0 +1,201 @@
+export const frontmatter = {
+  title: "5 Common Database Design Mistakes and How to Avoid Them",
+  description:
+    "Learn about the most common pitfalls in database schema design and discover practical solutions to create more efficient, scalable, and maintainable database structures.",
+  image: "/blog/database-design.webp",
+  date: "2024-03-10",
+  authorName: "Sarah Chen",
+  authorSrc: "/avatars/sarah.png",
+};
+
+# 5 Common Database Design Mistakes and How to Avoid Them
+
+A well-designed database schema is the foundation of any successful application. However, even experienced developers can fall into common traps. Let's explore five frequent mistakes and how to avoid them.
+
+## 1. Not Defining Primary Keys
+
+### The Mistake
+
+Creating tables without primary keys or using non-unique identifiers.
+
+```sql
+-- ❌ Bad: No primary key
+CREATE TABLE users (
+  email VARCHAR(255),
+  username VARCHAR(100),
+  created_at TIMESTAMP
+);
+```
+
+### The Solution
+
+Always define a primary key, preferably using auto-incrementing integers or UUIDs.
+
+-- ✅ Good: Clear primary key
+
+```sql
+CREATE TABLE users (
+id SERIAL PRIMARY KEY,
+email VARCHAR(255) UNIQUE NOT NULL,
+username VARCHAR(100) UNIQUE NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 2. Storing Multiple Values in a Single Column
+
+### The Mistake
+
+Using comma-separated values or JSON when proper relationships would work better.
+-- ❌ Bad: Comma-separated tags
+
+```sql
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255),
+  tags VARCHAR(500)  -- "tech,programming,database"
+);
+```
+
+### The Solution
+
+Create proper many-to-many relationships with junction tables.
+
+-- ✅ Good: Proper relationship structure
+
+```sql
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255)
+);
+
+CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE post_tags (
+  post_id INTEGER REFERENCES posts(id),
+  tag_id INTEGER REFERENCES tags(id),
+  PRIMARY KEY (post_id, tag_id)
+);
+```
+
+## 3. Over-Normalizing Your Schema
+
+### The Mistake
+
+Breaking down data into too many tables, making queries complex and slow.
+
+-- ❌ Potentially over-normalized
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE user_first_names (
+  user_id INTEGER PRIMARY KEY REFERENCES users(id),
+  first_name VARCHAR(100)
+);
+
+CREATE TABLE user_last_names (
+  user_id INTEGER PRIMARY KEY REFERENCES users(id),
+  last_name VARCHAR(100)
+);
+```
+
+### The Solution
+
+Keep related data together when it makes sense.
+
+-- ✅ Good: Balanced normalization
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  email VARCHAR(255) UNIQUE
+);
+```
+
+## 4. Ignoring Indexes on Foreign Keys
+
+### The Mistake
+
+Not creating indexes on frequently queried foreign key columns.
+
+-- ❌ Missing indexes
+
+```sql
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  created_at TIMESTAMP
+);
+```
+
+### The Solution
+
+Always index foreign keys and frequently filtered columns.
+
+-- ✅ Good: Proper indexing
+
+```sql
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  created_at TIMESTAMP
+);
+
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+CREATE INDEX idx_orders_created_at ON orders(created_at);
+```
+
+## 5. Not Planning for Soft Deletes
+
+### The Mistake
+
+Using hard deletes without considering data recovery or audit trails.
+
+-- ❌ Hard delete only
+
+```sql
+DELETE FROM users WHERE id = 123;
+```
+
+### The Solution
+
+Implement soft deletes with a deleted_at timestamp.
+
+-- ✅ Good: Soft delete support
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255),
+  deleted_at TIMESTAMP NULL
+);
+
+-- Query active users
+SELECT * FROM users WHERE deleted_at IS NULL;
+
+-- Soft delete
+UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = 123;
+```
+
+Quick Checklist
+
+Before finalizing your database schema, ask yourself:
+
+- ✓ Does every table have a primary key?
+- ✓ Are relationships properly defined with foreign keys?
+- ✓ Have I indexed frequently queried columns?
+- ✓ Is the normalization level appropriate?
+- ✓ Have I considered soft deletes for important data?
+- ✓ Are column types optimized for the data they store?
+- ✓ Have I added NOT NULL constraints where appropriate?
+  Conclusion
+
+Avoiding these common mistakes will help you build more robust, performant, and maintainable database schemas. Remember, good database design is about finding the right balance between normalization, performance, and simplicity.

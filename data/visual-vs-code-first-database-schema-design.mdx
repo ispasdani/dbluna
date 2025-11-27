@@ -1,0 +1,135 @@
+export const frontmatter = {
+  title: "Visual vs Code-First Database Schema Design",
+  description:
+    "Understand the differences between visual and code-first approaches to database schema design, and learn when to use each method for maximum productivity.",
+  image: "/blog/database-design.webp",
+  date: "2024-03-20",
+  authorName: "Manu Arora",
+  authorSrc: "/avatars/manu.png",
+};
+
+# Visual vs Code-First Database Schema Design
+
+When designing database schemas, developers often debate between visual drag-and-drop interfaces and code-first approaches. Both methods have their place in modern development workflows. Let's explore when to use each.
+
+## Visual Schema Design
+
+### Benefits
+
+Visual tools offer intuitive drag-and-drop interfaces that make database design accessible to everyone on your team.
+
+✓ Instant visual feedback ✓ Easy relationship visualization ✓ Lower learning curve ✓ Great for brainstorming
+
+### Best Use Cases
+
+- **Initial Design Phase**: Quickly sketch out ideas and get stakeholder feedback
+- **Team Collaboration**: Non-technical team members can understand and contribute
+- **Complex Relationships**: See connections between tables at a glance
+- **Documentation**: Auto-generate visual documentation for your database
+
+### Example Workflow
+
+1. Drag tables onto canvas
+2. Add columns with data types
+3. Draw relationships between tables
+4. Export to SQL when ready
+
+## Code-First Approach
+
+### Benefits
+
+Code-first design gives you precision control and version-friendly formats.
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  content TEXT
+);
+```
+
+Best Use Cases
+
+1. Version Control: Track schema changes in Git
+2. Migration Scripts: Direct control over database changes
+3. Complex Constraints: Write advanced SQL features
+4. CI/CD Integration: Automate schema deployments
+
+DBML Alternative
+
+```sql
+Table users {
+  id integer [primary key]
+  email varchar(255) [unique, not null]
+  created_at timestamp [default: `now()`]
+}
+
+Table posts {
+  id integer [primary key]
+  user_id integer [ref: > users.id]
+  title varchar(255)
+  content text
+}
+```
+
+### The Hybrid Approach
+
+### The most effective workflow combines both methods:
+
+### Design Phase
+
+### Start with visual tools to rapidly prototype and iterate on your schema design. This helps you:
+
+1. Quickly test different approaches
+2. Get immediate feedback from teammates
+3. Spot potential issues early
+4. Implementation Phase
+
+### Switch to code when you're ready to:
+
+1. Add detailed constraints and indexes
+2. Create migration scripts
+3. Integrate with version control
+4. Deploy to production
+5. Maintenance Phase
+
+### Use visual tools to:
+
+1. Onboard new team members
+2. Document existing schemas
+3. Plan major refactors
+
+### Switch to code for:
+
+1. Precise schema changes
+2. Complex data migrations
+3. Performance optimizations
+4. Choosing the Right Tool
+
+###Consider these factors when selecting your approach:
+
+### Visual Tools When:
+
+1. Team has mixed technical levels
+2. Need quick iterations
+3. Presenting to stakeholders
+4. Learning database design
+
+### Code-First When:
+
+1. Working with version control
+2. Need complex SQL features
+3. Automating deployments
+4. Integrating with CI/CD
+5. Conclusion
+
+Both visual and code-first approaches have distinct advantages. Modern tools allow you to seamlessly switch between them, giving you the best of both worlds. Start visually for speed and clarity, then move to code for precision and control.
+
+The key is recognizing that these aren't competing approaches—they're complementary tools in your database design toolkit.
