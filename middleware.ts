@@ -16,6 +16,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/(.*)", // keep public unless otherwise needed
   "/userDocs(.*)",
   "/blog(.*)",
+  "/about(.*)",
 ]);
 
 export default clerkMiddleware(
