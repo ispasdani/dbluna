@@ -19,26 +19,26 @@ export default function AboutPage() {
       <Container className="border-divide flex flex-col items-center justify-center border-x px-4 pt-10 pb-10 md:px-8 md:pt-32 md:pb-20">
         <div className="grid grid-cols-1 gap-20 md:grid-cols-2">
           <div className="flex flex-col items-start justify-start">
-            <Badge text="About Us" />
+            <Badge text="About Our Product" />
             <Heading className="mt-4 text-left">
-              We're Building the Future of Agent-Driven Development
+              We &#8217;re Engineering the Future of Visual-First Data Modeling
             </Heading>
             <SubHeading className="mt-6 mr-auto text-left">
-              Founded by engineers and AI researchers, Notus was born out of a
-              simple frustration: building intelligent systems still required
-              too much manual orchestration. We set out to change that by
-              creating a tool that lets teams design, simulate, and launch
-              autonomous agents visually and intuitively.
+              We built our platform on a simple belief: database should be fun
+              and design should feel intuitive, not intimidating. Created by
+              engineers and design enthusiasts who remember when software was
+              crafted with genuine care for the human experience, our tool
+              brings clarity and delight back to schema design.
               <br /> <br />
-              Today, Notus powers next-gen workflows for startups, dev teams,
-              and AI-first platforms across the globe. Whether you're automating
-              internal ops, scaling customer support, or building complex
-              multi-agent systems.
+              With our platform, you can effortlessly switch between a powerful
+              visual canvas and a clean, expressive code editor—without losing
+              context, precision, or flow. It &#8217;s the database design tool
+              we always wished existed.
             </SubHeading>
           </div>
           <div className="border-divide rounded-3xl border p-2">
             <Image
-              src="https://images.unsplash.com/photo-1552581234-26160f608093?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src=""
               alt="About Us"
               width={1000}
               height={1000}
@@ -46,42 +46,22 @@ export default function AboutPage() {
             />
           </div>
         </div>
-        <div className="mt-20 flex w-full flex-col items-center lg:flex-row">
-          <h2 className="mb-4 min-w-40 text-center font-mono text-sm tracking-tight text-neutral-500 uppercase lg:mb-0 lg:text-left dark:text-neutral-400">
+        <div className="mt-10 flex w-full flex-col items-center lg:flex-row">
+          <h2 className="mb-4 min-w-35 text-center font-mono text-sm tracking-tight text-neutral-500 uppercase lg:mb-0 lg:text-left dark:text-neutral-400">
             As featured in
           </h2>
           <div className="grid w-full grid-cols-2 items-center gap-4 md:grid-cols-4">
             <Image
-              src="/logos/bloomberg.png"
+              src="/logos/productHunt.png"
               alt="Bloomberg"
-              width={140}
-              height={140}
-              className="h-6 w-auto object-contain dark:invert dark:filter"
-            />
-            <Image
-              src="/logos/wired.png"
-              alt="Bloomberg"
-              width={140}
-              height={140}
-              className="h-6 w-auto object-contain dark:invert dark:filter"
-            />
-            <Image
-              src="/logos/forbes.png"
-              alt="Bloomberg"
-              width={140}
-              height={140}
-              className="h-6 w-auto object-contain dark:invert dark:filter"
-            />
-            <Image
-              src="/logos/the-guardian.png"
-              alt="Bloomberg"
-              width={140}
-              height={140}
-              className="h-6 w-auto object-contain dark:invert dark:filter"
+              width={200}
+              height={70}
+              className="h-14 w-auto object-contain dark:invert dark:filter"
             />
           </div>
         </div>
       </Container>
+      <DivideX />
     </main>
   );
 }
