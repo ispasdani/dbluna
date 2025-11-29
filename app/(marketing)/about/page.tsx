@@ -2,6 +2,8 @@ import { Badge } from "@/components/general/badge";
 import { Container } from "@/components/general/container";
 import { DivideX } from "@/components/general/divideX";
 import { Heading } from "@/components/general/heading";
+import { InformationBlock } from "@/components/general/informationBlock";
+import { SectionHeading } from "@/components/general/sectionHeading";
 import { SubHeading } from "@/components/general/subHeading";
 import { Testimonials } from "@/components/general/testimonials";
 import { getSEOTags } from "@/lib/seo";
@@ -83,6 +85,27 @@ export default function AboutPage() {
       </Container>
       <DivideX />
       <Testimonials />
+      <Container className="border-divide border-x border-t p-4 py-20 md:px-8 md:py-40">
+        <div className="grid grid-cols-1 gap-10 md:gap-20 lg:grid-cols-2">
+          <div className="flex flex-col items-start justify-start">
+            <Badge text="Journey and Values" />
+            <SectionHeading className="mt-4 text-left">
+              Helping Engineering Teams Focus on Important Things
+            </SectionHeading>
+            <SubHeading className="mt-6 mr-auto text-left">
+              We empower developers and technical teams to create, simulate, and
+              manage AI-driven workflows visually
+            </SubHeading>
+            <div className="divide-divide mt-8 grid grid-cols-3 gap-6">
+              <MetricBlock value="1.2M+" label="Workflows created" />
+              <MetricBlock value="6.4k" label="Tech Community" />
+              <MetricBlock value="1.2K" label="G2 reviews" />
+            </div>
+          </div>
+          <InformationBlock />
+        </div>
+      </Container>
+      <DivideX />
     </main>
   );
 }
