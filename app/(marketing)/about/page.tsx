@@ -3,6 +3,7 @@ import { Container } from "@/components/general/container";
 import { DivideX } from "@/components/general/divideX";
 import { Heading } from "@/components/general/heading";
 import { SubHeading } from "@/components/general/subHeading";
+import { Testimonials } from "@/components/general/testimonials";
 import { getSEOTags } from "@/lib/seo";
 import Image from "next/image";
 
@@ -48,7 +49,7 @@ export default function AboutPage() {
         </div>
         <div className="mt-10 flex w-full flex-col items-center lg:flex-row">
           <h2 className="mb-4 min-w-35 text-center font-mono text-sm tracking-tight text-neutral-500 uppercase lg:mb-0 lg:text-left dark:text-neutral-400">
-            As featured in
+            Featured in
           </h2>
           <div className="grid w-full grid-cols-2 items-center gap-4 md:grid-cols-4">
             <Image
@@ -58,10 +59,30 @@ export default function AboutPage() {
               height={70}
               className="h-14 w-auto object-contain dark:invert dark:filter"
             />
+            <Image
+              src="/logos/indieHackers.png"
+              alt="Bloomberg"
+              width={200}
+              height={70}
+              className="h-7 w-auto object-contain dark:invert dark:filter"
+            />
+            <div className="flex justify-start items-center">
+              <Image
+                src="/logos/betaList.svg"
+                alt="Bloomberg"
+                width={200}
+                height={70}
+                className="h-8 w-auto object-contain dark:invert dark:filter"
+              />
+              <p className="ml-3 font-mono uppercase font-bold text-xl">
+                BetaList
+              </p>
+            </div>
           </div>
         </div>
       </Container>
       <DivideX />
+      <Testimonials />
     </main>
   );
 }

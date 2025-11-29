@@ -15,35 +15,34 @@ export const Dot = ({
   right?: boolean;
   bottom?: boolean;
 }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isNearMouse, setIsNearMouse] = useState(false);
   const dotRef = useRef<HTMLDivElement>(null);
 
+  // (Optional) if you actually need theme; otherwise remove this line.
+  const { theme } = useTheme();
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+      if (!dotRef.current) return;
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    if (dotRef.current) {
       const dotRect = dotRef.current.getBoundingClientRect();
       const dotCenterX = dotRect.left + dotRect.width / 2;
       const dotCenterY = dotRect.top + dotRect.height / 2;
 
       const distance = Math.sqrt(
-        Math.pow(mousePosition.x - dotCenterX, 2) +
-          Math.pow(mousePosition.y - dotCenterY, 2)
+        Math.pow(e.clientX - dotCenterX, 2) +
+          Math.pow(e.clientY - dotCenterY, 2)
       );
 
-      setIsNearMouse(distance <= 100);
-    }
-  }, [mousePosition]);
+      const nextIsNear = distance <= 100;
 
-  const { theme } = useTheme();
+      // Avoid unnecessary state updates (and extra renders)
+      setIsNearMouse((prev) => (prev === nextIsNear ? prev : nextIsNear));
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   return (
     <motion.div
@@ -58,7 +57,7 @@ export const Dot = ({
       animate={{
         backgroundColor: isNearMouse
           ? "var(--color-brand)"
-          : "var(--color-primary)",
+          : "var(--color-primary-motion)",
         boxShadow: isNearMouse
           ? "0 0 20px var(--color-brand), 0 0 40px var(--color-brand)"
           : "none",

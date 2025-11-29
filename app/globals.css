@@ -65,6 +65,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-brand: #f17463;
+  --color-primary-motion: #202020;
   --color-charcoal-900: #202020;
   --color-charcoal-800: #29292e;
   --color-charcoal-700: #343434;
