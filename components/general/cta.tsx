@@ -1,14 +1,9 @@
 "use client";
 
-import React from "react";
-import { cn } from "@/lib/utils";
-
 import { Container } from "./container";
 import { Button } from "./button";
 import Link from "next/link";
 import { SectionHeading } from "./sectionHeading";
-
-type SvgComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 export type CTAOrbitProps = {
   size?: number;
