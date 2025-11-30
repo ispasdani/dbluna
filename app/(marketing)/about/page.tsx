@@ -90,11 +90,12 @@ export default function AboutPage() {
           <div className="flex flex-col items-start justify-start">
             <Badge text="Journey and Values" />
             <SectionHeading className="mt-4 text-left">
-              Helping Engineering Teams Focus on Important Things
+              Designing Data Tools That Feel Human Again
             </SectionHeading>
             <SubHeading className="mt-6 mr-auto text-left">
-              We empower developers and technical teams to create, simulate, and
-              manage AI-driven workflows visually
+              Our journey is about creating tools that support people, not the
+              other way around. DbLuna helps teams visualize, iterate, and
+              understand their data with clarity and joy.
             </SubHeading>
             <div className="divide-divide mt-8 grid grid-cols-3 gap-6">
               <MetricBlock value="1.2M+" label="Workflows created" />
