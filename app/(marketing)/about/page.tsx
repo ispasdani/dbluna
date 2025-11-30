@@ -98,9 +98,9 @@ export default function AboutPage() {
               understand their data with clarity and joy.
             </SubHeading>
             <div className="divide-divide mt-8 grid grid-cols-3 gap-6">
-              <MetricBlock value="1.2M+" label="Workflows created" />
-              <MetricBlock value="6.4k" label="Tech Community" />
-              <MetricBlock value="1.2K" label="G2 reviews" />
+              <MetricBlock value="320+" label="Workflows created" />
+              <MetricBlock value="113+" label="Users Community" />
+              <MetricBlock value="3rd Place" label="Month Top Products" />
             </div>
           </div>
           <InformationBlock />
