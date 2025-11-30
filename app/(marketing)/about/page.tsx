@@ -1,5 +1,6 @@
 import { Badge } from "@/components/general/badge";
 import { Container } from "@/components/general/container";
+import { CTA } from "@/components/general/cta";
 import { DivideX } from "@/components/general/divideX";
 import { Heading } from "@/components/general/heading";
 import { InformationBlock } from "@/components/general/informationBlock";
@@ -106,6 +107,8 @@ export default function AboutPage() {
           <InformationBlock />
         </div>
       </Container>
+      <DivideX />
+      <CTA />
       <DivideX />
     </main>
   );
