@@ -12,30 +12,31 @@ import {
 export const InformationBlock = () => {
   const useCases = [
     {
-      title: "Complete Ownership",
+      title: "Complete Clarity",
       description:
-        "Take full control of your AI agents and workflows with comprehensive ownership and customization options",
+        "Design and understand your data models at a glance with a visual-first workspace that keeps complexity out of the way.",
       icon: <CloudCheckIcon className="text-brand size-6" />,
     },
     {
-      title: "High-Paced",
+      title: "Move Fast, Think Visually",
       description:
-        "Build and deploy autonomous agents rapidly with our streamlined development environment",
+        "Sketch, refine, and iterate on your schemas with the speed of a whiteboard—no friction, no heavy setup, just flow.",
       icon: <BoltIcon className="text-brand size-6" />,
     },
     {
-      title: "Absolute Integrity",
+      title: "Built-In Confidence",
       description:
-        "Ensure reliable and secure agent operations with built-in safety measures and transparent processes",
+        "Stay accurate and aligned with smart validations, relationship checks, and a modeling experience that prevents mistakes before they happen.",
       icon: <ShieldSplitIcon className="text-brand size-6" />,
     },
     {
-      title: "Meaningful Impact",
+      title: "Designs That Matter",
       description:
-        "Create AI solutions that drive real business value and transform how your team works",
+        "Create structures your whole team can understand—bringing clarity, consistency, and long-lasting value to every project.",
       icon: <SparklesIcon className="text-brand size-6" />,
     },
   ];
+
   const [activeUseCase, setActiveUseCase] = useState<number | null>(null);
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
