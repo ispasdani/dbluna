@@ -127,5 +127,5 @@ const Step = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Price = ({ value }: { value: number | null }) => {
-  return <SlidingNumber value={value ? value : 0} />;
+  return <SlidingNumber value={value} />;
 };

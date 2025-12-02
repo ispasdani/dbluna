@@ -16,17 +16,22 @@ export const PricingTable = () => {
     []
   );
 
-  const titleToPrice: Record<string, { monthly: number; yearly: number }> =
-    useMemo(() => {
-      const map: Record<string, { monthly: number; yearly: number }> = {};
-      tiers.forEach((t) => {
-        map[t.title] = {
-          monthly: t.monthly ? t.monthly : 0,
-          yearly: t.yearly ? t.yearly : 0,
-        };
-      });
-      return map;
-    }, []);
+  const titleToPrice: Record<
+    string,
+    { monthly: number | null; yearly: number | null }
+  > = useMemo(() => {
+    const map: Record<
+      string,
+      { monthly: number | null; yearly: number | null }
+    > = {};
+    tiers.forEach((t) => {
+      map[t.title] = {
+        monthly: t.monthly,
+        yearly: t.yearly,
+      };
+    });
+    return map;
+  }, []);
 
   return (
     <section>

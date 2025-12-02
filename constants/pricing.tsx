@@ -14,7 +14,7 @@ export const tiers = [
     monthly: 0,
     yearly: 0,
     ctaText: "Get started",
-    ctaLink: "/sign-up",
+    ctaLink: "/w",
     features: [
       "Up to 5 diagrams",
       "Up to 20 tables per diagram",
@@ -31,7 +31,7 @@ export const tiers = [
     subtitle: "For professionals & teams",
     monthly: 10,
     yearly: 100,
-    ctaText: "Start free trial",
+    ctaText: "Get started",
     ctaLink: "/sign-up",
     features: [
       "Unlimited diagrams & tables",

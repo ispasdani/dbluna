@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useId } from "react";
 import { MotionValue, motion, useSpring, useTransform } from "motion/react";
 import useMeasure from "react-use-measure";
@@ -40,7 +41,6 @@ function Number({ mv, number }: { mv: MotionValue<number>; number: number }) {
     return memo;
   });
 
-  // don't render the animated number until we know the height
   if (!bounds.height) {
     return (
       <span ref={ref} className="invisible absolute">
@@ -68,7 +68,7 @@ function Number({ mv, number }: { mv: MotionValue<number>; number: number }) {
 }
 
 type SlidingNumberProps = {
-  value: number;
+  value: number | null;
   padStart?: boolean;
   decimalSeparator?: string;
 };
@@ -78,6 +78,10 @@ export function SlidingNumber({
   padStart = false,
   decimalSeparator = ".",
 }: SlidingNumberProps) {
+  if (value == null) {
+    return <>{""}</>;
+  }
+
   const absValue = Math.abs(value);
   const [integerPart, decimalPart] = absValue.toString().split(".");
   const integerValue = parseInt(integerPart, 10);
