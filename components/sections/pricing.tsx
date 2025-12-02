@@ -126,6 +126,6 @@ const Step = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const Price = ({ value }: { value: number }) => {
-  return <SlidingNumber value={value} />;
+const Price = ({ value }: { value: number | null }) => {
+  return <SlidingNumber value={value ? value : 0} />;
 };

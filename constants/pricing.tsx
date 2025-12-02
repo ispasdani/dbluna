@@ -2,90 +2,125 @@ import { CheckIcon } from "@/components/ui/cardIcons";
 import { CloseIcon } from "@/components/ui/generalcons";
 
 export enum TierName {
-  TIER_1 = "Growth",
-  TIER_2 = "Scale",
+  TIER_1 = "Free",
+  TIER_2 = "Pro",
   TIER_3 = "Enterprise",
 }
 
 export const tiers = [
   {
     title: TierName.TIER_1,
-    subtitle: "Early stage teams",
-    monthly: 8,
-    yearly: 80,
-    ctaText: "Start building",
+    subtitle: "For individuals getting started",
+    monthly: 0,
+    yearly: 0,
+    ctaText: "Get started",
     ctaLink: "/sign-up",
     features: [
-      "Up to 5 active agents",
-      "50 simulation runs",
-      "Visual builder access",
-      "GitHub + Zapier integration",
-      "Basic support",
-      "1 team workspace",
-      "Workflow APIs",
-      "Community Slack access",
+      "Up to 5 diagrams",
+      "Up to 20 tables per diagram",
+      "1 workspace",
+      "SQL & DBML import/export",
+      "Export to PNG/SVG",
+      "Basic templates",
+      "Public diagrams only",
+      "Community support",
     ],
   },
   {
     title: TierName.TIER_2,
-    subtitle: "Fast moving startups",
-    monthly: 12,
-    yearly: 120,
-    ctaText: "Start for free",
+    subtitle: "For professionals & teams",
+    monthly: 10,
+    yearly: 100,
+    ctaText: "Start free trial",
     ctaLink: "/sign-up",
     features: [
-      "Up to 25 active agents",
-      "150 simulation runs",
-      "Visual builder access",
-      "GitHub + Zapier integration",
+      "Unlimited diagrams & tables",
+      "Unlimited workspaces",
+      "Private & protected diagrams",
+      "Collaboration (up to 5 members)",
+      "Export to PDF, PNG, SVG, SQL, DBML",
+      "Full template library",
+      "Areas & sticky notes",
+      "Version history",
+      "AI credits available for purchase",
       "Priority support",
-      "3 team workspace",
-      "Workflow APIs",
-      "Priority Slack access",
     ],
     featured: true,
   },
   {
     title: TierName.TIER_3,
-    subtitle: "Large enterprises",
-    monthly: 25,
-    yearly: 250,
+    subtitle: "For organizations at scale",
+    monthly: null,
+    yearly: null,
     ctaText: "Contact sales",
     ctaLink: "/contact",
     features: [
-      "Unlimited active agents",
-      "Unlimited simulation runs",
-      "Visual builder access",
-      "GitHub + Zapier integration",
-      "Priority support",
-      "Unlimited team workspace",
-      "Workflow APIs",
-      "Priority Slack access",
-      "Access to Fight Club",
+      "Everything in Pro",
+      "Unlimited team members",
+      "Role-based access control",
+      "SSO & advanced security",
+      "Custom branding",
+      "API access",
+      "Audit logs",
+      "Dedicated account manager",
+      "Volume AI credits at discounted rates",
+      "SLA & premium support",
     ],
   },
 ];
 
 export const pricingTable = [
   {
-    title: "Seat Limit",
+    title: "Diagrams",
+    tiers: [
+      { title: TierName.TIER_1, value: "5" },
+      { title: TierName.TIER_2, value: "Unlimited" },
+      { title: TierName.TIER_3, value: "Unlimited" },
+    ],
+  },
+  {
+    title: "Tables per diagram",
+    tiers: [
+      { title: TierName.TIER_1, value: "20" },
+      { title: TierName.TIER_2, value: "Unlimited" },
+      { title: TierName.TIER_3, value: "Unlimited" },
+    ],
+  },
+  {
+    title: "Workspaces",
+    tiers: [
+      { title: TierName.TIER_1, value: "1" },
+      { title: TierName.TIER_2, value: "Unlimited" },
+      { title: TierName.TIER_3, value: "Unlimited" },
+    ],
+  },
+  {
+    title: "Team members",
+    tiers: [
+      { title: TierName.TIER_1, value: "1" },
+      { title: TierName.TIER_2, value: "Up to 5" },
+      { title: TierName.TIER_3, value: "Unlimited" },
+    ],
+  },
+  {
+    title: "SQL Import/Export",
     tiers: [
       {
         title: TierName.TIER_1,
-        value: "Up to 3",
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_2,
-        value: "Up to 10",
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_3,
-        value: "Unlimited",
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
     ],
   },
   {
-    title: "Two-factor authentication",
+    title: "DBML Import/Export",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -102,7 +137,24 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Pay-per-task billing",
+    title: "Export to PNG/SVG",
+    tiers: [
+      {
+        title: TierName.TIER_1,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_2,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_3,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+    ],
+  },
+  {
+    title: "Export to PDF",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -119,41 +171,7 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Static IP",
-    tiers: [
-      {
-        title: TierName.TIER_1,
-        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
-      },
-      {
-        title: TierName.TIER_2,
-        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
-      },
-      {
-        title: TierName.TIER_3,
-        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
-      },
-    ],
-  },
-  {
-    title: "Record Limit",
-    tiers: [
-      {
-        title: TierName.TIER_1,
-        value: "1,000",
-      },
-      {
-        title: TierName.TIER_2,
-        value: "10,000",
-      },
-      {
-        title: TierName.TIER_3,
-        value: "Unlimited",
-      },
-    ],
-  },
-  {
-    title: "Folder Permissions",
+    title: "Private diagrams",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -170,24 +188,7 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Teams",
-    tiers: [
-      {
-        title: TierName.TIER_1,
-        value: "1",
-      },
-      {
-        title: TierName.TIER_2,
-        value: "3",
-      },
-      {
-        title: TierName.TIER_3,
-        value: "Unlimited",
-      },
-    ],
-  },
-  {
-    title: "Shared Nodes",
+    title: "Areas & sticky notes",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -204,7 +205,7 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Shared app connections",
+    title: "Table grouping & colors",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -221,41 +222,7 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Agents",
-    tiers: [
-      {
-        title: TierName.TIER_1,
-        value: "5",
-      },
-      {
-        title: TierName.TIER_2,
-        value: "25",
-      },
-      {
-        title: TierName.TIER_3,
-        value: "Unlimited",
-      },
-    ],
-  },
-  {
-    title: "Chatbots",
-    tiers: [
-      {
-        title: TierName.TIER_1,
-        value: "2",
-      },
-      {
-        title: TierName.TIER_2,
-        value: "10",
-      },
-      {
-        title: TierName.TIER_3,
-        value: "Unlimited",
-      },
-    ],
-  },
-  {
-    title: "Nodus MCP",
+    title: "Version history",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -272,7 +239,57 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Nodus Canvas",
+    title: "Schema validation",
+    tiers: [
+      { title: TierName.TIER_1, value: "Basic" },
+      { title: TierName.TIER_2, value: "Advanced" },
+      { title: TierName.TIER_3, value: "Advanced" },
+    ],
+  },
+  {
+    title: "Templates",
+    tiers: [
+      { title: TierName.TIER_1, value: "Basic" },
+      { title: TierName.TIER_2, value: "Full library" },
+      { title: TierName.TIER_3, value: "Full library + Custom" },
+    ],
+  },
+  {
+    title: "Code editor",
+    tiers: [
+      {
+        title: TierName.TIER_1,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_2,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_3,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+    ],
+  },
+  {
+    title: "Minimap navigation",
+    tiers: [
+      {
+        title: TierName.TIER_1,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_2,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_3,
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
+      },
+    ],
+  },
+  {
+    title: "AI credits purchase",
     tiers: [
       {
         title: TierName.TIER_1,
@@ -282,6 +299,20 @@ export const pricingTable = [
         title: TierName.TIER_2,
         value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
+      { title: TierName.TIER_3, value: "Volume discount" },
+    ],
+  },
+  {
+    title: "Role-based access",
+    tiers: [
+      {
+        title: TierName.TIER_1,
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
+      },
+      {
+        title: TierName.TIER_2,
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
+      },
       {
         title: TierName.TIER_3,
         value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
@@ -289,54 +320,62 @@ export const pricingTable = [
     ],
   },
   {
-    title: "Tables",
+    title: "SSO",
     tiers: [
       {
         title: TierName.TIER_1,
-        value: "5",
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_2,
-        value: "50",
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_3,
-        value: "Unlimited",
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
     ],
   },
   {
-    title: "Access Permissions",
+    title: "API access",
     tiers: [
       {
         title: TierName.TIER_1,
-        value: "Basic",
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_2,
-        value: "Advanced",
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_3,
-        value: "Enterprise",
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
     ],
   },
   {
-    title: "Record Templates",
+    title: "Audit logs",
     tiers: [
       {
         title: TierName.TIER_1,
-        value: "10",
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_2,
-        value: "100",
+        value: <CloseIcon className="mx-auto size-5 text-gray-600" />,
       },
       {
         title: TierName.TIER_3,
-        value: "Unlimited",
+        value: <CheckIcon className="mx-auto size-5 text-gray-600" />,
       },
+    ],
+  },
+  {
+    title: "Support",
+    tiers: [
+      { title: TierName.TIER_1, value: "Community" },
+      { title: TierName.TIER_2, value: "Priority" },
+      { title: TierName.TIER_3, value: "Dedicated + SLA" },
     ],
   },
 ];
