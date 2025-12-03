@@ -1,7 +1,7 @@
 // convex/diagrams.ts
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireSignedIn } from "./guards";
+import { requirePro, requireSignedIn, requireWorkspaceRole } from "./guards";
 import { Doc } from "./_generated/dataModel";
 
 type DiagramUpdates = Partial<
@@ -22,15 +22,21 @@ export const createDiagram = mutation({
     camera: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    const user = await requireSignedIn(ctx);
+    const { user } = await requireWorkspaceRole(ctx, args.workspaceId, [
+      "owner",
+      "admin",
+      "editor",
+    ]);
+
+    requirePro(user); // or implement a small free quota instead
+
     const ws = await ctx.db.get(args.workspaceId);
     if (!ws) throw new ConvexError("Workspace not found");
-    // (optionally) ensure user is member/editor of that workspace
 
     return await ctx.db.insert("diagrams", {
       workspaceId: args.workspaceId,
       name: args.name,
-      createdBy: user._id, // <-- derive
+      createdBy: user._id,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       tables: args.tables ?? [],
@@ -53,12 +59,19 @@ export const updateDiagram = mutation({
     camera: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    const user = await requireSignedIn(ctx);
     const d = await ctx.db.get(args.diagramId);
     if (!d) throw new ConvexError("Diagram not found");
-    // (optionally) ensure user has rights in its workspace
+
+    const { user } = await requireWorkspaceRole(ctx, d.workspaceId, [
+      "owner",
+      "admin",
+      "editor",
+    ]);
+
+    requirePro(user);
 
     const updates: DiagramUpdates = { updatedAt: Date.now() };
+
     if (args.name !== undefined) updates.name = args.name;
     if (args.tables !== undefined) updates.tables = args.tables;
     if (args.relationships !== undefined)
@@ -75,10 +88,17 @@ export const updateDiagram = mutation({
 export const deleteDiagram = mutation({
   args: { diagramId: v.id("diagrams") },
   handler: async (ctx, { diagramId }) => {
-    const user = await requireSignedIn(ctx);
     const d = await ctx.db.get(diagramId);
     if (!d) throw new ConvexError("Diagram not found");
-    // (optionally) ensure user has rights in its workspace
+
+    const { user } = await requireWorkspaceRole(ctx, d.workspaceId, [
+      "owner",
+      "admin",
+    ]);
+
+    // If you want deletion Pro-only:
+    requirePro(user);
+
     await ctx.db.delete(diagramId);
   },
 });
@@ -86,10 +106,18 @@ export const deleteDiagram = mutation({
 export const duplicateDiagram = mutation({
   args: { diagramId: v.id("diagrams") },
   handler: async (ctx, { diagramId }) => {
-    const user = await requireSignedIn(ctx);
     const original = await ctx.db.get(diagramId);
     if (!original) throw new ConvexError("Diagram not found");
-    // (optionally) check workspace membership
+
+    const { user } = await requireWorkspaceRole(ctx, original.workspaceId, [
+      "owner",
+      "admin",
+      "editor",
+      "viewer",
+    ]);
+
+    // Duplicating is still "saving", so gate it:
+    requirePro(user);
 
     return await ctx.db.insert("diagrams", {
       workspaceId: original.workspaceId,
