@@ -26,7 +26,7 @@ export const Hero = () => {
       </SubHeading>
 
       <div className="mt-6 flex items-center gap-4">
-        <Button as={Link} href="/sign-up">
+        <Button as={Link} href="/w/23">
           Start building
         </Button>
         <Button variant="secondary" as={Link} href="/pricing">
