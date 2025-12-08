@@ -1,6 +1,5 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, query } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
 
 // Helpers
 const now = () => Date.now();
