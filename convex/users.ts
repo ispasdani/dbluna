@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, query } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 
 // Helpers
 const now = () => Date.now();
@@ -11,7 +12,7 @@ export const getUserById = query({
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
       .unique();
 
     if (!user) {
@@ -46,8 +47,9 @@ export const createUser = internalMutation({
     // Prevent duplicates by clerkId
     const existing = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
       .unique();
+
     if (existing) {
       throw new ConvexError("User with this clerkId already exists");
     }
@@ -95,7 +97,7 @@ export const updateUser = internalMutation({
   async handler(ctx, args) {
     const user = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
       .unique();
 
     if (!user) {
@@ -131,12 +133,26 @@ export const deleteUser = internalMutation({
   async handler(ctx, args) {
     const user = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
       .unique();
 
     if (!user) {
       throw new ConvexError("User not found");
     }
+
+    // OPTIONAL: clean up related data here if you want
+    // e.g. diagramMembers, diagrams, etc.
+    // const userId: Id<"users"> = user._id;
+    // const memberships = await ctx.db
+    //   .query("diagramMembers")
+    //   .withIndex("by_user", (q) => q.eq("userId", userId))
+    //   .collect();
+    // for (const m of memberships) {
+    //   await ctx.db.delete(m._id);
+    // }
+    //
+    // You might also want to soft-delete or reassign diagrams
+    // where user is ownerId.
 
     await ctx.db.delete(user._id);
   },

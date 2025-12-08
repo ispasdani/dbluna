@@ -1,8 +1,14 @@
 // convex/diagrams.ts
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-import { requirePro, requireSignedIn, requireWorkspaceRole } from "./guards";
-import { Doc } from "./_generated/dataModel";
+import { mutation } from "./_generated/server";
+import {
+  requirePro,
+  requireSignedIn,
+  requireDiagramEditor,
+  requireDiagramOwnerOrAdmin,
+  requireDiagramViewer,
+} from "./guards";
+import type { Doc, Id } from "./_generated/dataModel";
 
 type DiagramUpdates = Partial<
   Pick<
@@ -11,43 +17,60 @@ type DiagramUpdates = Partial<
   >
 > & { updatedAt: number };
 
+/**
+ * Create a new diagram for the current user.
+ * (Cloud save → gated behind Pro, free users stay in localStorage only.)
+ */
 export const createDiagram = mutation({
   args: {
-    workspaceId: v.id("workspaces"),
     name: v.string(),
     tables: v.optional(v.any()),
     relationships: v.optional(v.any()),
     areas: v.optional(v.any()),
     notes: v.optional(v.any()),
     camera: v.optional(v.any()),
+    // Optional: if you decide to route via a custom public id instead of Convex id:
+    publicId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const { user } = await requireWorkspaceRole(ctx, args.workspaceId, [
-      "owner",
-      "admin",
-      "editor",
-    ]);
+    const user = await requireSignedIn(ctx);
 
-    requirePro(user); // or implement a small free quota instead
+    // If you want cloud diagrams to be Pro-only:
+    requirePro(user);
 
-    const ws = await ctx.db.get(args.workspaceId);
-    if (!ws) throw new ConvexError("Workspace not found");
+    const now = Date.now();
 
-    return await ctx.db.insert("diagrams", {
-      workspaceId: args.workspaceId,
+    const diagramId = await ctx.db.insert("diagrams", {
+      ownerId: user._id,
       name: args.name,
-      createdBy: user._id,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: now,
+      updatedAt: now,
+      publicId: args.publicId,
       tables: args.tables ?? [],
       relationships: args.relationships ?? [],
       areas: args.areas ?? [],
       notes: args.notes ?? [],
       camera: args.camera ?? { x: 0, y: 0, zoom: 1 },
+      isDeleted: false,
     });
+
+    // Ensure the owner also has an explicit membership row.
+    await ctx.db.insert("diagramMembers", {
+      diagramId,
+      userId: user._id,
+      role: "owner",
+      invitedAt: now,
+      acceptedAt: now,
+      updatedAt: now,
+    });
+
+    return diagramId;
   },
 });
 
+/**
+ * Update diagram contents (owner/admin/editor).
+ */
 export const updateDiagram = mutation({
   args: {
     diagramId: v.id("diagrams"),
@@ -60,14 +83,11 @@ export const updateDiagram = mutation({
   },
   handler: async (ctx, args) => {
     const d = await ctx.db.get(args.diagramId);
-    if (!d) throw new ConvexError("Diagram not found");
+    if (!d || d.isDeleted) throw new ConvexError("Diagram not found");
 
-    const { user } = await requireWorkspaceRole(ctx, d.workspaceId, [
-      "owner",
-      "admin",
-      "editor",
-    ]);
+    const { user } = await requireDiagramEditor(ctx, args.diagramId);
 
+    // Still treating “saving to cloud” as a Pro feature:
     requirePro(user);
 
     const updates: DiagramUpdates = { updatedAt: Date.now() };
@@ -85,51 +105,68 @@ export const updateDiagram = mutation({
   },
 });
 
+/**
+ * Delete a diagram (owner/admin).
+ * You can make this a soft delete if you prefer.
+ */
 export const deleteDiagram = mutation({
   args: { diagramId: v.id("diagrams") },
   handler: async (ctx, { diagramId }) => {
     const d = await ctx.db.get(diagramId);
-    if (!d) throw new ConvexError("Diagram not found");
+    if (!d || d.isDeleted) throw new ConvexError("Diagram not found");
 
-    const { user } = await requireWorkspaceRole(ctx, d.workspaceId, [
-      "owner",
-      "admin",
-    ]);
+    const { user } = await requireDiagramOwnerOrAdmin(ctx, diagramId);
 
-    // If you want deletion Pro-only:
+    // If you want deletion to also be Pro-only:
     requirePro(user);
 
+    // Hard delete:
     await ctx.db.delete(diagramId);
+
+    // Or soft delete:
+    // await ctx.db.patch(diagramId, { isDeleted: true, updatedAt: Date.now() });
   },
 });
 
+/**
+ * Duplicate a diagram (any member with at least viewer access).
+ */
 export const duplicateDiagram = mutation({
   args: { diagramId: v.id("diagrams") },
   handler: async (ctx, { diagramId }) => {
     const original = await ctx.db.get(diagramId);
-    if (!original) throw new ConvexError("Diagram not found");
+    if (!original || original.isDeleted)
+      throw new ConvexError("Diagram not found");
 
-    const { user } = await requireWorkspaceRole(ctx, original.workspaceId, [
-      "owner",
-      "admin",
-      "editor",
-      "viewer",
-    ]);
+    const { user } = await requireDiagramViewer(ctx, diagramId);
 
-    // Duplicating is still "saving", so gate it:
     requirePro(user);
 
-    return await ctx.db.insert("diagrams", {
-      workspaceId: original.workspaceId,
+    const now = Date.now();
+
+    const newDiagramId = await ctx.db.insert("diagrams", {
+      ownerId: user._id, // the duplicator becomes the owner of the copy
       name: `${original.name} (Copy)`,
-      createdBy: user._id,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: now,
+      updatedAt: now,
+      publicId: undefined, // or generate a new one if you use public ids
       tables: original.tables,
       relationships: original.relationships,
       areas: original.areas,
       notes: original.notes,
       camera: original.camera,
+      isDeleted: false,
     });
+
+    await ctx.db.insert("diagramMembers", {
+      diagramId: newDiagramId,
+      userId: user._id,
+      role: "owner",
+      invitedAt: now,
+      acceptedAt: now,
+      updatedAt: now,
+    });
+
+    return newDiagramId;
   },
 });

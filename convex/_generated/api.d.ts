@@ -13,8 +13,6 @@ import type * as diagrams from "../diagrams.js";
 import type * as guards from "../guards.js";
 import type * as http from "../http.js";
 import type * as users from "../users.js";
-import type * as workspaceMembers from "../workspaceMembers.js";
-import type * as workspaces from "../workspaces.js";
 
 import type {
   ApiFromModules,
@@ -36,8 +34,6 @@ declare const fullApi: ApiFromModules<{
   guards: typeof guards;
   http: typeof http;
   users: typeof users;
-  workspaceMembers: typeof workspaceMembers;
-  workspaces: typeof workspaces;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

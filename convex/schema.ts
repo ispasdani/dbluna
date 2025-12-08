@@ -12,47 +12,27 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
 
-    // Subscription fields (for future use)
-    subscriptionId: v.optional(v.string()), // Stripe subscription ID
-    subscriptionStatus: v.optional(v.string()), // active, canceled, past_due, etc.
-    currentPeriodStart: v.optional(v.string()), // ISO date string
-    currentPeriodEnd: v.optional(v.string()), // ISO date string
-    cancelAtPeriodEnd: v.optional(v.boolean()), // true if user canceled but subscription is still active
-    planId: v.optional(v.id("plans")), // reference to current subscription plan
+    // Subscription fields
+    subscriptionId: v.optional(v.string()),
+    subscriptionStatus: v.optional(v.string()),
+    currentPeriodStart: v.optional(v.string()),
+    currentPeriodEnd: v.optional(v.string()),
+    cancelAtPeriodEnd: v.optional(v.boolean()),
+    planId: v.optional(v.id("plans")),
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_email", ["email"]),
 
-  workspaces: defineTable({
-    name: v.string(),
-    ownerId: v.id("users"),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  }).index("by_owner", ["ownerId"]),
-
-  workspaceMembers: defineTable({
-    workspaceId: v.id("workspaces"),
-    userId: v.id("users"),
-    role: v.union(
-      v.literal("owner"),
-      v.literal("admin"),
-      v.literal("editor"),
-      v.literal("viewer")
-    ),
-    joinedAt: v.number(),
-    updatedAt: v.optional(v.number()),
-  })
-    .index("by_workspace", ["workspaceId"])
-    .index("by_user", ["userId"])
-    .index("by_workspace_and_user", ["workspaceId", "userId"]),
-
+  // 🔹 Diagrams
   diagrams: defineTable({
-    workspaceId: v.id("workspaces"),
+    ownerId: v.id("users"), // creator / ultimate owner
     name: v.string(),
-    createdBy: v.id("users"),
     createdAt: v.number(),
     updatedAt: v.number(),
-    // Store the actual diagram data
+
+    // Optional public / short id for URLs, if you want
+    publicId: v.optional(v.string()),
+
     tables: v.array(v.any()),
     relationships: v.array(v.any()),
     areas: v.array(v.any()),
@@ -62,9 +42,29 @@ export default defineSchema({
       y: v.number(),
       zoom: v.number(),
     }),
+
+    isDeleted: v.optional(v.boolean()),
   })
-    .index("by_workspace", ["workspaceId"])
-    .index("by_creator", ["createdBy"]),
+    .index("by_owner", ["ownerId"])
+    .index("by_publicId", ["publicId"]),
+
+  // 🔹 Per-user roles on each diagram
+  diagramMembers: defineTable({
+    diagramId: v.id("diagrams"),
+    userId: v.id("users"),
+    role: v.union(
+      v.literal("owner"),
+      v.literal("admin"),
+      v.literal("editor"),
+      v.literal("viewer")
+    ),
+    invitedAt: v.number(),
+    acceptedAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_diagram", ["diagramId"])
+    .index("by_user", ["userId"])
+    .index("by_diagram_and_user", ["diagramId", "userId"]),
 
   userPreferences: defineTable({
     userId: v.id("users"),
@@ -76,12 +76,12 @@ export default defineSchema({
 
   plans: defineTable({
     name: v.string(), // 'FREE' | 'PRO'
-    features: v.optional(v.any()), // optional structured feature set
+    features: v.optional(v.any()),
     createdAt: v.number(),
   }),
 
   visitors: defineTable({
-    visitorId: v.string(), // from cookie
+    visitorId: v.string(),
     userAgent: v.optional(v.string()),
     createdAt: v.number(),
     lastSeenAt: v.number(),
@@ -89,10 +89,9 @@ export default defineSchema({
 
   analyticsEvents: defineTable({
     visitorId: v.string(),
-    userId: v.optional(v.id("users")), // if the same person later signs in
-    type: v.string(), // 'page_view' | 'attempt_save' | ...
-    workspaceId: v.optional(v.id("workspaces")),
-    diagramId: v.optional(v.id("diagrams")),
+    userId: v.optional(v.id("users")),
+    type: v.string(),
+    diagramId: v.optional(v.id("diagrams")), // no workspaceId now
     path: v.optional(v.string()),
     meta: v.optional(v.any()),
     ts: v.number(),
