@@ -10,6 +10,7 @@ import { Badge } from "../general/badge";
 import { GartnerLogo } from "../uiAssets/gartnerLogo";
 import { Star } from "../uiAssets/star";
 import { GartnerLogoText } from "../uiAssets/gartnerLogoText";
+import { ButtonWithIdGenerator } from "../general/buttonWithIdgenerator";
 
 export const Hero = () => {
   return (
@@ -26,9 +27,7 @@ export const Hero = () => {
       </SubHeading>
 
       <div className="mt-6 flex items-center gap-4">
-        <Button as={Link} href="/w/23">
-          Start building
-        </Button>
+        <ButtonWithIdGenerator>Start building</ButtonWithIdGenerator>
         <Button variant="secondary" as={Link} href="/pricing">
           View pricing
         </Button>
