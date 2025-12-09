@@ -24,7 +24,7 @@ export const ButtonWithIdGenerator = <T extends React.ElementType = "button">({
   const handleStartBuilding = () => {
     const diagramId = crypto.randomUUID();
 
-    router.push(`/diagram/${diagramId}`);
+    router.push(`/d/${diagramId}`);
   };
 
   return (

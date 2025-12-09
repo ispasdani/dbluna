@@ -11,7 +11,7 @@ const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/w(.*)", // your public workspace route
+  "/d(.*)", // your public workspace route
   "/clerk(.*)", // Convex webhook endpoint
   "/api/(.*)", // keep public unless otherwise needed
   "/userDocs(.*)",
