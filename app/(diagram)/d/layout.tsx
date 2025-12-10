@@ -1,3 +1,6 @@
+import { DivideX } from "@/components/general/divideX";
+import TopMainNavbar from "@/components/workbench/topMainNavbar/topMainNavbar";
+
 export default function WorkspaceLayout({
   children,
 }: {
@@ -5,9 +8,8 @@ export default function WorkspaceLayout({
 }) {
   return (
     <section className="h-screen w-full overflow-hidden">
-      <nav style={{ backgroundColor: "red", width: "100%", height: "10vh" }}>
-        workspace nav
-      </nav>
+      <TopMainNavbar />
+      <DivideX />
       {children}
     </section>
   );
