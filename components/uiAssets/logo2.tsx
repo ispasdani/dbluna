@@ -23,7 +23,7 @@ export const Logo2 = () => {
   return (
     <Link href="/" className="flex items-center justify-center gap-1">
       <LogoSVG />
-      <span className="text-2xl font-bold">
+      <span className="text-xl font-bold">
         <span className="text-brand">DB</span>LUNA
       </span>
     </Link>
