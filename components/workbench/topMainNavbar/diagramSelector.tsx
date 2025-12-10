@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,28 +13,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
-import {
   ChevronsUpDown,
   Plus,
   Check,
   FileText,
   Trash2,
   Pencil,
-  Info,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Button } from "@/components/general/button";
 import { useEditorStore } from "@/store/editorStore";
-import { Input } from "@/components/ui/input";
+import { useUserTier } from "@/hooks/useUserTier";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const DiagramSelector = () => {
+  const router = useRouter();
+  const { tier, isLoaded } = useUserTier();
+
   const {
     diagrams,
     currentDiagramId,
@@ -39,6 +43,7 @@ export const DiagramSelector = () => {
     switchDiagram,
     deleteDiagram,
     renameDiagram,
+    getCurrentDiagram,
   } = useEditorStore();
 
   const [isRenamingDiagram, setIsRenamingDiagram] = useState<string | null>(
@@ -46,7 +51,7 @@ export const DiagramSelector = () => {
   );
   const [renameDiagramValue, setRenameDiagramValue] = useState("");
 
-  const currentDiagram = diagrams.find((d) => d.id === currentDiagramId);
+  const currentDiagram = getCurrentDiagram();
   const hasSavedDiagram = !!currentDiagram;
 
   const currentLabel = hasSavedDiagram
@@ -106,6 +111,24 @@ export const DiagramSelector = () => {
   };
 
   const handleCreateDiagram = () => {
+    // wait until Clerk has loaded so we know the real tier
+    if (!isLoaded) return;
+
+    // only Pro users can create multiple diagrams
+    if (tier !== "pro") {
+      toast.info("Upgrade to Pro to create multiple diagrams", {
+        description:
+          tier === "guest"
+            ? "Sign in and upgrade to save and manage multiple diagrams."
+            : "Your current plan supports a single local diagram. Upgrade to Pro for more.",
+        action: {
+          label: "Upgrade",
+          onClick: () => router.push("/pricing?reason=extra-diagrams"),
+        },
+      });
+      return;
+    }
+
     const name = "Untitled diagram";
     createDiagram(name);
 
@@ -118,37 +141,20 @@ export const DiagramSelector = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="secondary"
-          className="flex justify-center items-center gap-2 px-3 text-foreground hover:bg-muted"
+          variant="ghost"
+          className="gap-2 px-3 text-foreground hover:bg-muted"
         >
           <FileText className="h-4 w-4" />
           <span className="font-medium truncate max-w-[180px]">
             {currentLabel}
           </span>
-
-          {!hasSavedDiagram && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Info className="h-4 w-4 text-amber-500" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    This diagram is generated from a random id and not saved
-                    yet.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-
           <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
         align="start"
-        className="truncate w-54 bg-popover z-50 shadow-md"
+        className="w-64 bg-popover z-50 shadow-md"
       >
         <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
           Diagrams
@@ -194,6 +200,8 @@ export const DiagramSelector = () => {
                     onClick={(e) => e.stopPropagation()}
                   />
                   <Button
+                    variant="ghost"
+                    size="sm"
                     className="h-6 w-6 p-0 shrink-0 hover:bg-green-100 dark:hover:bg-green-900"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -204,6 +212,8 @@ export const DiagramSelector = () => {
                     <Check className="h-3 w-3" />
                   </Button>
                   <Button
+                    variant="ghost"
+                    size="sm"
                     className="h-6 w-6 p-0 shrink-0 hover:bg-red-100 dark:hover:bg-red-900"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -236,6 +246,8 @@ export const DiagramSelector = () => {
             {isRenamingDiagram !== diagram.id && (
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
                 <Button
+                  variant="ghost"
+                  size="sm"
                   className="h-6 w-6 p-0 shrink-0"
                   onClick={(e) =>
                     handleStartRenameDiagram(diagram.id, diagram.name, e)
@@ -246,6 +258,8 @@ export const DiagramSelector = () => {
                 </Button>
                 {diagrams.length > 1 && (
                   <Button
+                    variant="ghost"
+                    size="sm"
                     className="h-6 w-6 p-0 shrink-0"
                     onClick={(e) => handleDeleteDiagram(diagram.id, e)}
                     aria-label="Delete diagram"
@@ -260,13 +274,30 @@ export const DiagramSelector = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          onClick={handleCreateDiagram}
-          className="cursor-pointer text-primary"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          <span>Create Diagram</span>
-        </DropdownMenuItem>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuItem
+                onClick={handleCreateDiagram}
+                aria-disabled={tier !== "pro"}
+                className={cn(
+                  "text-primary",
+                  tier !== "pro" && "opacity-50 cursor-not-allowed"
+                )}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                <span>Create Diagram</span>
+              </DropdownMenuItem>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                {tier === "pro"
+                  ? "Create a new diagram."
+                  : "Upgrade to Pro to create and manage multiple diagrams."}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </DropdownMenuContent>
     </DropdownMenu>
   );

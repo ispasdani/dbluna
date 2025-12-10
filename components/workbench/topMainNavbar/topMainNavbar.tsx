@@ -1,6 +1,7 @@
 import { ModeToggle } from "@/components/general/modeToggle";
 import { Logo2 } from "@/components/uiAssets/logo2";
 import { DiagramSelector } from "./diagramSelector";
+import { DiagramCloudStatus } from "./diagramCloudStatus";
 
 const TopMainNavbar = () => {
   return (
@@ -16,7 +17,11 @@ const DesktopDiv = () => {
   return (
     <div className="hidden items-center justify-between px-4 md:flex w-full">
       <Logo2 />
-      <DiagramSelector />
+      <div className="flex items-center gap-3">
+        <DiagramSelector />
+        <DiagramCloudStatus />
+      </div>
+
       <ModeToggle />
     </div>
   );
