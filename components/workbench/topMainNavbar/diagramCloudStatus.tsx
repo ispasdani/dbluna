@@ -55,17 +55,10 @@ export const DiagramCloudStatus = () => {
           <TooltipTrigger asChild>
             <div className="inline-flex items-center justify-center rounded-full border border-border px-2 py-1 text-xs gap-1 cursor-default">
               <Cloud className={iconClasses} />
-              <span className="hidden sm:inline text-xs text-muted-foreground">
-                {diagram?.persistence === "cloud"
-                  ? "Cloud"
-                  : diagram?.persistence === "local"
-                    ? "Local"
-                    : "Unsaved"}
-              </span>
             </div>
           </TooltipTrigger>
           <TooltipContent>
-            <p className="max-w-xs flex flex-col gap-2">
+            <p className="max-w-xs flex flex-col gap-3">
               {tooltipText}{" "}
               {showUpgradeButton && (
                 <Button

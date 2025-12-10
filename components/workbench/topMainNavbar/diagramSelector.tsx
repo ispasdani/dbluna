@@ -13,6 +13,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   ChevronsUpDown,
   Plus,
   Check,
@@ -25,12 +39,15 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { useUserTier } from "@/hooks/useUserTier";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { z } from "zod";
+
+const diagramSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "Diagram name cannot be empty" })
+    .max(50, { message: "Diagram name must be less than 50 characters" }),
+});
 
 export const DiagramSelector = () => {
   const router = useRouter();
@@ -50,6 +67,11 @@ export const DiagramSelector = () => {
     null
   );
   const [renameDiagramValue, setRenameDiagramValue] = useState("");
+
+  // NEW: create-diagram dialog state
+  const [isDiagramDialogOpen, setIsDiagramDialogOpen] = useState(false);
+  const [diagramName, setDiagramName] = useState("");
+  const [diagramError, setDiagramError] = useState<string | null>(null);
 
   const currentDiagram = getCurrentDiagram();
   const hasSavedDiagram = !!currentDiagram;
@@ -86,23 +108,23 @@ export const DiagramSelector = () => {
   };
 
   const handleSubmitRenameDiagram = (diagramId: string) => {
-    const trimmed = renameDiagramValue.trim();
+    try {
+      const validated = diagramSchema.parse({ name: renameDiagramValue });
+      renameDiagram(diagramId, validated.name);
 
-    if (!trimmed) {
-      toast.error("Invalid name", {
-        description: "Diagram name cannot be empty.",
+      toast.success("Diagram renamed", {
+        description: `Renamed to "${validated.name}".`,
       });
-      return;
+
+      setIsRenamingDiagram(null);
+      setRenameDiagramValue("");
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        toast.error("Invalid name", {
+          description: err.message,
+        });
+      }
     }
-
-    renameDiagram(diagramId, trimmed);
-
-    toast.success("Diagram renamed", {
-      description: `Renamed to "${trimmed}".`,
-    });
-
-    setIsRenamingDiagram(null);
-    setRenameDiagramValue("");
   };
 
   const handleCancelRenameDiagram = () => {
@@ -110,7 +132,8 @@ export const DiagramSelector = () => {
     setRenameDiagramValue("");
   };
 
-  const handleCreateDiagram = () => {
+  // When user clicks "Create Diagram" in dropdown
+  const handleCreateDiagramClick = () => {
     // wait until Clerk has loaded so we know the real tier
     if (!isLoaded) return;
 
@@ -129,176 +152,250 @@ export const DiagramSelector = () => {
       return;
     }
 
-    const name = "Untitled diagram";
-    createDiagram(name);
+    // Open the create-diagram dialog for Pro users
+    setDiagramName("");
+    setDiagramError(null);
+    setIsDiagramDialogOpen(true);
+  };
 
-    toast.success("Diagram created", {
-      description: `"${name}" has been created successfully.`,
-    });
+  // When user submits the create-diagram dialog
+  const handleSubmitDiagram = () => {
+    try {
+      const validated = diagramSchema.parse({ name: diagramName });
+
+      // 🔹 create the diagram and get its id
+      const newId = createDiagram(validated.name);
+
+      toast.success("Diagram created", {
+        description: `"${validated.name}" has been created successfully.`,
+      });
+
+      // 🔹 close modal + reset state
+      setIsDiagramDialogOpen(false);
+      setDiagramName("");
+      setDiagramError(null);
+
+      // 🔹 redirect to the new diagram URL
+      router.push(`/d/${newId}`);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setDiagramError(err.message);
+      }
+    }
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="gap-2 px-3 text-foreground hover:bg-muted"
-        >
-          <FileText className="h-4 w-4" />
-          <span className="font-medium truncate max-w-[180px]">
-            {currentLabel}
-          </span>
-          <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent
-        align="start"
-        className="w-64 bg-popover z-50 shadow-md"
-      >
-        <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
-          Diagrams
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        {diagrams.map((diagram) => (
-          <DropdownMenuItem
-            key={diagram.id}
-            onClick={() =>
-              isRenamingDiagram !== diagram.id && switchDiagram(diagram.id)
-            }
-            className="cursor-pointer flex items-center justify-between group"
-            onSelect={(e) => {
-              if (isRenamingDiagram === diagram.id) {
-                e.preventDefault();
-              }
-            }}
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="gap-2 px-3 text-foreground hover:bg-muted"
           >
-            <div className="flex items-center flex-1 min-w-0 gap-1">
-              <Check
-                className={cn(
-                  "mr-2 h-4 w-4 shrink-0",
-                  diagram.id === currentDiagramId ? "opacity-100" : "opacity-0"
-                )}
-              />
+            <FileText className="h-4 w-4" />
+            <span className="font-medium truncate max-w-[180px]">
+              {currentLabel}
+            </span>
+            <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </DropdownMenuTrigger>
 
-              {isRenamingDiagram === diagram.id ? (
-                <>
-                  <Input
-                    value={renameDiagramValue}
-                    onChange={(e) => setRenameDiagramValue(e.target.value)}
-                    onKeyDown={(e) => {
-                      e.stopPropagation();
-                      if (e.key === "Enter") {
+        <DropdownMenuContent
+          align="start"
+          className="w-64 bg-popover z-50 shadow-md"
+        >
+          <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
+            Diagrams
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+
+          {diagrams.map((diagram) => (
+            <DropdownMenuItem
+              key={diagram.id}
+              onClick={() =>
+                isRenamingDiagram !== diagram.id && switchDiagram(diagram.id)
+              }
+              className="cursor-pointer flex items-center justify-between group"
+              onSelect={(e) => {
+                if (isRenamingDiagram === diagram.id) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <div className="flex items-center flex-1 min-w-0 gap-1">
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4 shrink-0",
+                    diagram.id === currentDiagramId
+                      ? "opacity-100"
+                      : "opacity-0"
+                  )}
+                />
+
+                {isRenamingDiagram === diagram.id ? (
+                  <>
+                    <Input
+                      value={renameDiagramValue}
+                      onChange={(e) => setRenameDiagramValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+                        if (e.key === "Enter") {
+                          handleSubmitRenameDiagram(diagram.id);
+                        } else if (e.key === "Escape") {
+                          handleCancelRenameDiagram();
+                        }
+                      }}
+                      className="h-6 px-2 text-sm flex-1"
+                      autoFocus
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 shrink-0 hover:bg-green-100 dark:hover:bg-green-900"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         handleSubmitRenameDiagram(diagram.id);
-                      } else if (e.key === "Escape") {
+                      }}
+                      aria-label="Save"
+                    >
+                      <Check className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 shrink-0 hover:bg-red-100 dark:hover:bg-red-900"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         handleCancelRenameDiagram();
+                      }}
+                      aria-label="Cancel"
+                    >
+                      <X className="h-3 w-3 text-red-600 dark:text-red-400" />
+                    </Button>
+                  </>
+                ) : (
+                  <span
+                    className="truncate flex-1 select-none"
+                    onDoubleClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleStartRenameDiagram(diagram.id, diagram.name, e);
+                    }}
+                    onMouseDown={(e) => {
+                      if (e.detail === 2) {
+                        e.preventDefault();
                       }
                     }}
-                    className="h-6 px-2 text-sm flex-1"
-                    autoFocus
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 shrink-0 hover:bg-green-100 dark:hover:bg-green-900"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSubmitRenameDiagram(diagram.id);
-                    }}
-                    aria-label="Save"
                   >
-                    <Check className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 shrink-0 hover:bg-red-100 dark:hover:bg-red-900"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCancelRenameDiagram();
-                    }}
-                    aria-label="Cancel"
-                  >
-                    <X className="h-3 w-3 text-red-600 dark:text-red-400" />
-                  </Button>
-                </>
-              ) : (
-                <span
-                  className="truncate flex-1 select-none"
-                  onDoubleClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleStartRenameDiagram(diagram.id, diagram.name, e);
-                  }}
-                  onMouseDown={(e) => {
-                    if (e.detail === 2) {
-                      e.preventDefault();
-                    }
-                  }}
-                >
-                  {diagram.name}
-                </span>
-              )}
-            </div>
+                    {diagram.name}
+                  </span>
+                )}
+              </div>
 
-            {isRenamingDiagram !== diagram.id && (
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0 shrink-0"
-                  onClick={(e) =>
-                    handleStartRenameDiagram(diagram.id, diagram.name, e)
-                  }
-                  aria-label="Rename diagram"
-                >
-                  <Pencil className="h-3 w-3" />
-                </Button>
-                {diagrams.length > 1 && (
+              {isRenamingDiagram !== diagram.id && (
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
                   <Button
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 shrink-0"
-                    onClick={(e) => handleDeleteDiagram(diagram.id, e)}
-                    aria-label="Delete diagram"
+                    onClick={(e) =>
+                      handleStartRenameDiagram(diagram.id, diagram.name, e)
+                    }
+                    aria-label="Rename diagram"
                   >
-                    <Trash2 className="h-3 w-3" />
+                    <Pencil className="h-3 w-3" />
                   </Button>
-                )}
-              </div>
-            )}
-          </DropdownMenuItem>
-        ))}
+                  {diagrams.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 shrink-0"
+                      onClick={(e) => handleDeleteDiagram(diagram.id, e)}
+                      aria-label="Delete diagram"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+              )}
+            </DropdownMenuItem>
+          ))}
 
-        <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenuItem
-                onClick={handleCreateDiagram}
-                aria-disabled={tier !== "pro"}
-                className={cn(
-                  "text-primary",
-                  tier !== "pro" && "opacity-50 cursor-not-allowed"
-                )}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuItem
+                  onClick={handleCreateDiagramClick}
+                  aria-disabled={tier !== "pro"}
+                  className={cn(
+                    "text-primary",
+                    tier !== "pro" && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  <span>Create Diagram</span>
+                </DropdownMenuItem>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {tier === "pro"
+                    ? "Create a new diagram."
+                    : "Upgrade to Pro to create and manage multiple diagrams."}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Create Diagram Dialog */}
+      <Dialog open={isDiagramDialogOpen} onOpenChange={setIsDiagramDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-popover">
+          <DialogHeader>
+            <DialogTitle>Create New Diagram</DialogTitle>
+            <DialogDescription>
+              Enter a name for your new diagram.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <label
+                htmlFor="diagram-name"
+                className="text-sm font-medium text-foreground"
               >
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Create Diagram</span>
-              </DropdownMenuItem>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                {tier === "pro"
-                  ? "Create a new diagram."
-                  : "Upgrade to Pro to create and manage multiple diagrams."}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </DropdownMenuContent>
-    </DropdownMenu>
+                Diagram Name
+              </label>
+              <Input
+                id="diagram-name"
+                placeholder="Untitled Diagram"
+                value={diagramName}
+                onChange={(e) => {
+                  setDiagramName(e.target.value);
+                  setDiagramError(null);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmitDiagram()}
+                className={cn(diagramError && "border-destructive")}
+                maxLength={50}
+              />
+              {diagramError && (
+                <p className="text-sm text-destructive">{diagramError}</p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDiagramDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitDiagram}>Create Diagram</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
