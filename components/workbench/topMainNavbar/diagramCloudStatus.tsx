@@ -53,7 +53,7 @@ export const DiagramCloudStatus = () => {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="inline-flex items-center justify-center rounded-full border border-border px-2 py-1 text-xs gap-1 cursor-default">
+            <div className="inline-flex items-center justify-center rounded-full border-[1.5px] border-border dark:border-divide px-2 py-1 text-xs gap-1 cursor-default">
               <Cloud className={iconClasses} />
             </div>
           </TooltipTrigger>
