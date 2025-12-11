@@ -68,7 +68,6 @@ export const DiagramSelector = () => {
   );
   const [renameDiagramValue, setRenameDiagramValue] = useState("");
 
-  // NEW: create-diagram dialog state
   const [isDiagramDialogOpen, setIsDiagramDialogOpen] = useState(false);
   const [diagramName, setDiagramName] = useState("");
   const [diagramError, setDiagramError] = useState<string | null>(null);
@@ -250,9 +249,9 @@ export const DiagramSelector = () => {
                       onClick={(e) => e.stopPropagation()}
                     />
                     <Button
-                      variant="ghost"
+                      variant="secondary"
                       size="sm"
-                      className="h-6 w-6 p-0 shrink-0 hover:bg-green-100 dark:hover:bg-green-900"
+                      className="h-6 w-6 p-0 shrink-0 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleSubmitRenameDiagram(diagram.id);
@@ -262,16 +261,16 @@ export const DiagramSelector = () => {
                       <Check className="h-3 w-3" />
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="secondary"
                       size="sm"
-                      className="h-6 w-6 p-0 shrink-0 hover:bg-red-100 dark:hover:bg-red-900"
+                      className="h-6 w-6 p-0 shrink-0 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCancelRenameDiagram();
                       }}
                       aria-label="Cancel"
                     >
-                      <X className="h-3 w-3 text-red-600 dark:text-red-400" />
+                      <X className="h-3 w-3" />
                     </Button>
                   </>
                 ) : (
@@ -298,7 +297,7 @@ export const DiagramSelector = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 shrink-0"
+                    className="h-6 w-6 p-0 shrink-0 cursor-pointer"
                     onClick={(e) =>
                       handleStartRenameDiagram(diagram.id, diagram.name, e)
                     }
@@ -310,7 +309,7 @@ export const DiagramSelector = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0 shrink-0"
+                      className="h-6 w-6 p-0 shrink-0 cursor-pointer"
                       onClick={(e) => handleDeleteDiagram(diagram.id, e)}
                       aria-label="Delete diagram"
                     >
