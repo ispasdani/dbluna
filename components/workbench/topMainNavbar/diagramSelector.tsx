@@ -40,6 +40,7 @@ import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { useUserTier } from "@/hooks/useUserTier";
 import { z } from "zod";
+import { Text } from "@/components/general/text";
 
 const diagramSchema = z.object({
   name: z
@@ -193,7 +194,9 @@ export const DiagramSelector = () => {
           >
             <FileText className="h-4 w-4" />
             <span className="font-medium truncate max-w-[180px]">
-              {currentLabel}
+              <Text variant="primary" size="sm">
+                {currentLabel}
+              </Text>
             </span>
             <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
           </Button>
@@ -287,7 +290,9 @@ export const DiagramSelector = () => {
                       }
                     }}
                   >
-                    {diagram.name}
+                    <Text variant="secondary" size="sm">
+                      {diagram.name}
+                    </Text>
                   </span>
                 )}
               </div>
